@@ -112,7 +112,9 @@ const translationMemoryCache = new Map();
 // 📖 Custom Glossary Overrides (Ensures accurate devotional and festival vocabulary)
 const customGlossary = {
   hi: {
-    "schedule": "शेड्यूल",
+    "schedule": "कार्यक्रम",
+    "gallery": "तस्वीरें",
+    "photo gallery": "तस्वीरें",
     "aarti": "आरती",
     "prasad": "प्रसाद",
     "mahaprasad": "महाप्रसाद",
@@ -133,7 +135,7 @@ const customGlossary = {
     "mandal": "मंडल"
   },
   gu: {
-    "schedule": "શિડ્યુલ",
+    "schedule": "કાર્યક્રમ",
     "aarti": "આરતી",
     "prasad": "પ્રસાદ",
     "mahaprasad": "મહાપ્રસાદ",
