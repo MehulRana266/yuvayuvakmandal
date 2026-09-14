@@ -37,19 +37,21 @@ export default function AboutPage() {
           margin-bottom: 40px;
         }
         .about-story-card {
-          min-height: 195px;
-          padding: 28px 24px !important;
+          min-height: 205px;
+          padding: 24px 20px !important;
           display: flex !important;
           flex-direction: column !important;
           justify-content: flex-start !important;
           box-sizing: border-box;
         }
         .about-story-card-title {
-          font-size: clamp(15px, 1.6vw, 18px) !important;
+          font-size: clamp(14px, 1.4vw, 17px) !important;
+          line-height: 1.35 !important;
+          word-break: normal;
         }
         .about-story-card-desc {
           font-size: clamp(12px, 1.2vw, 14px) !important;
-          line-height: 1.75 !important;
+          line-height: 1.7 !important;
         }
         @media (max-width: 768px) {
           .about-page-container {
@@ -224,7 +226,7 @@ export default function AboutPage() {
             <div style={{ background: 'rgba(255,179,0,0.15)', padding: '8px 10px', borderRadius: '10px', border: '1px solid #FFB300', flexShrink: 0 }}>
               <Trophy size={22} color="#FFB300" />
             </div>
-            <h4 className="heading-font gold-text about-story-card-title" style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <h4 className="heading-font gold-text about-story-card-title" style={{ margin: 0, lineHeight: 1.35 }}>
               <Translate text={card1Title} />
             </h4>
           </div>
@@ -245,7 +247,7 @@ export default function AboutPage() {
             <div style={{ background: 'rgba(255,179,0,0.15)', padding: '8px 10px', borderRadius: '10px', border: '1px solid #FFB300', flexShrink: 0 }}>
               <ShieldCheck size={22} color="#FFB300" />
             </div>
-            <h4 className="heading-font gold-text about-story-card-title" style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <h4 className="heading-font gold-text about-story-card-title" style={{ margin: 0, lineHeight: 1.35 }}>
               <Translate text={card2Title} />
             </h4>
           </div>
@@ -266,7 +268,7 @@ export default function AboutPage() {
             <div style={{ background: 'rgba(255,179,0,0.15)', padding: '8px 10px', borderRadius: '10px', border: '1px solid #FFB300', flexShrink: 0 }}>
               <Sparkles size={22} color="#FFB300" />
             </div>
-            <h4 className="heading-font gold-text about-story-card-title" style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <h4 className="heading-font gold-text about-story-card-title" style={{ margin: 0, lineHeight: 1.35 }}>
               <Translate text={card3Title} />
             </h4>
           </div>
