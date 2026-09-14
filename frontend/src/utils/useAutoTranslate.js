@@ -89,7 +89,20 @@ const CLIENT_GLOSSARY = {
     'divine photo & video gallery': 'दिव्य फोटो एवं वीडियो गैलरी',
     'divine aarti & utsav schedule': 'दिव्य आरती एवं उत्सव सारणी',
     'sacred pandal address': 'पवित्र पंडाल स्थान',
-    'click to view': 'देखने के लिए क्लिक करें'
+    'click to view': 'देखने के लिए क्लिक करें',
+    'morning aarti': 'सुबह की आरती',
+    'evening aarti': 'संध्या आरती',
+    'morning aarti (subhah ki aarti)': 'सुबह की आरती',
+    'evening maha aarti (shaam ki aarti)': 'शाम की महा आरती',
+    '50+ years glorious legacy': '50+ वर्ष की गौरवशाली विरासत',
+    'cultural mission & vision': 'सांस्कृतिक मिशन और विजन',
+    'cultural mission and vision': 'सांस्कृतिक मिशन और विजन',
+    'a glorious legacy of togetherness': 'एकजुटता की एक गौरवशाली विरासत',
+    'our mission is to preserve rich sanatan traditions, promote spiritual harmony, and empower youth through community leadership and divine service.': 'हमारा मिशन समृद्ध सनातन परंपराओं को संरक्षित करना, आध्यात्मिक सद्भाव को बढ़ावा देना और सामुदायिक नेतृत्व और दिव्य सेवा के माध्यम से युवाओं को सशक्त बनाना है।',
+    'this is more than just a celebration; it is a tradition of unity, devotion, and shared memories that brings our entire community together year after year.': 'यह महज़ एक उत्सव से कहीं अधिक है; यह एकता, भक्ति और साझा यादों की परंपरा है जो हमारे पूरे समुदाय को साल-दर-साल एक साथ लाती है।',
+    'founded in 1968 by passionate youth of sagrampura, navsari bazaar, surat, yuva yuvak mandal has grown into one of the most respected ganesh utsav mandals in gujarat.': '1968 में सग्रामपुरा, नवसारी बाज़ार, सूरत के उत्साही युवाओं द्वारा स्थापित, युवा युवक मंडल गुजरात में सबसे सम्मानित गणेश उत्सव मंडलों में से एक बन गया है।',
+    'inspired by the spirit of devotion, unity, and culture, yuva yuvak mandal has been organizing the ganesh utsav mahotsav since 1968.\nour mission is to preserve our rich cultural heritage, pass on the sacred traditions of ganesh utsav to the younger generation, and bring youth together through devotion, cultural values, and community unity.': 'भक्ति, एकता और संस्कृति की भावना से प्रेरित होकर युवा युवक मंडल 1968 से गणेश उत्सव महोत्सव का आयोजन करता आ रहा है।\nहमारा मिशन हमारी समृद्ध सांस्कृतिक विरासत को संरक्षित करना, गणेश उत्सव की पवित्र परंपराओं को युवा पीढ़ी तक पहुंचाना और भक्ति, सांस्कृतिक मूल्यों और सामुदायिक एकता के माध्यम से युवाओं को एक साथ लाना है।',
+    'preserving rich cultural heritage, serving humanity through blood donation & food distribution, and uniting youth in divine devotion since 1968.': '1968 से समृद्ध सांस्कृतिक विरासत को संरक्षित करना, रक्तदान और भोजन वितरण के माध्यम से मानवता की सेवा करना और युवाओं को दिव्य भक्ति में एकजुट करना।'
   },
   GU: {
     'the king of': 'રાજા',
@@ -173,7 +186,20 @@ const CLIENT_GLOSSARY = {
     'divine photo & video gallery': 'દિવ્ય ફોટો અને વિડિયો ગેલેરી',
     'divine aarti & utsav schedule': 'દિવ્ય આરતી અને ઉત્સવ શિડ્યુલ',
     'sacred pandal address': 'પવિત્ર મંડપ સરનામું',
-    'click to view': 'જોવા માટે ક્લિક કરો'
+    'click to view': 'જોવા માટે ક્લિક કરો',
+    'morning aarti': 'સવારની આરતી',
+    'evening aarti': 'સાંજની આરતી',
+    'morning aarti (subhah ki aarti)': 'સવારની આરતી',
+    'evening maha aarti (shaam ki aarti)': 'સાંજની મહા આરતી',
+    '50+ years glorious legacy': '50+ વર્ષનો ભવ્ય વારસો',
+    'cultural mission & vision': 'સાંસ્કૃતિક મિશન અને વિઝન',
+    'cultural mission and vision': 'સાંસ્કૃતિક મિશન અને વિઝન',
+    'a glorious legacy of togetherness': 'એકતાનો ભવ્ય વારસો',
+    'our mission is to preserve rich sanatan traditions, promote spiritual harmony, and empower youth through community leadership and divine service.': 'અમારું ધ્યેય સમૃદ્ધ સનાતન પરંપરાઓને જાળવી રાખવાનું, આધ્યાત્મિક સંવાદિતાને પ્રોત્સાહન આપવાનું અને સમુદાય નેતૃત્વ અને દૈવી સેવા દ્વારા યુવાનોને સશક્ત કરવાનું છે.',
+    'this is more than just a celebration; it is a tradition of unity, devotion, and shared memories that brings our entire community together year after year.': 'આ માત્ર એક ઉજવણી કરતાં વધુ છે; તે એકતા, ભક્તિ અને સહિયારી યાદોની પરંપરા છે જે આપણા સમગ્ર સમુદાયને વર્ષ-દર વર્ષે સાથે લાવે છે.',
+    'founded in 1968 by passionate youth of sagrampura, navsari bazaar, surat, yuva yuvak mandal has grown into one of the most respected ganesh utsav mandals in gujarat.': 'સગરામપુરા, નવસારી બજાર, સુરતના જુસ્સાદાર યુવાનો દ્વારા 1968માં સ્થપાયેલ, યુવા યુવક મંડળ ગુજરાતના સૌથી પ્રતિષ્ઠિત ગણેશ ઉત્સવ મંડળોમાંનું એક બની ગયું છે.',
+    'inspired by the spirit of devotion, unity, and culture, yuva yuvak mandal has been organizing the ganesh utsav mahotsav since 1968.\nour mission is to preserve our rich cultural heritage, pass on the sacred traditions of ganesh utsav to the younger generation, and bring youth together through devotion, cultural values, and community unity.': 'ભક્તિ, એકતા અને સંસ્કૃતિની ભાવનાથી પ્રેરિત, યુવા યુવક મંડળ 1968 થી ગણેશ ઉત્સવ મહોત્સવનું આયોજન કરે છે.\nઅમારું ધ્યેય આપણા સમૃદ્ધ સાંસ્કૃતિક વારસાને સાચવવાનું, ગણેશ ઉત્સવની પવિત્ર પરંપરાઓને યુવા પેઢી સુધી પહોંચાડવાનું અને ભક્તિ, સાંસ્કૃતિક મૂલ્યો અને સમુદાય એકતા દ્વારા યુવાનોને સાથે લાવવાનું છે.',
+    'preserving rich cultural heritage, serving humanity through blood donation & food distribution, and uniting youth in divine devotion since 1968.': 'સમૃદ્ધ સાંસ્કૃતિક વારસાની જાળવણી, રક્તદાન અને અન્ન વિતરણ દ્વારા માનવતાની સેવા કરવી અને 1968 થી યુવાનોને દૈવી ભક્તિમાં જોડવા.'
   }
 };
 
@@ -184,16 +210,24 @@ function getGlossaryOverride(lang, text) {
 
   const raw = text.trim();
   const lower = raw.toLowerCase();
+  const normNewlines = lower.replace(/\r\n/g, '\n');
 
   // 1. Direct dictionary match
   if (CLIENT_GLOSSARY[l][lower]) {
     return CLIENT_GLOSSARY[l][lower];
+  }
+  if (CLIENT_GLOSSARY[l][normNewlines]) {
+    return CLIENT_GLOSSARY[l][normNewlines];
   }
 
   // 2. Normalized dashes & stripped trailing punctuation match
   const normalized = lower.replace(/[–—]/g, '-').replace(/[.!?🚩\s]+$/, '');
   if (CLIENT_GLOSSARY[l][normalized]) {
     return CLIENT_GLOSSARY[l][normalized];
+  }
+  const normBoth = normNewlines.replace(/[–—]/g, '-').replace(/[.!?🚩\s]+$/, '');
+  if (CLIENT_GLOSSARY[l][normBoth]) {
+    return CLIENT_GLOSSARY[l][normBoth];
   }
 
   // 3. Dynamic Date pattern e.g. "on 12-09-2026"
@@ -250,10 +284,26 @@ function getCached(lang, text) {
     if (rawSiteData) {
       const parsed = JSON.parse(rawSiteData);
       const dict = parsed?.translations?.[lang];
-      if (dict && dict[clean]) {
-        const cleaned = postProcessTranslation(dict[clean], lang);
-        memoryCache.set(key, cleaned);
-        return cleaned;
+      if (dict) {
+        if (dict[clean]) {
+          const cleaned = postProcessTranslation(dict[clean], lang);
+          memoryCache.set(key, cleaned);
+          return cleaned;
+        }
+        const normClean = clean.replace(/\r\n/g, '\n');
+        if (dict[normClean]) {
+          const cleaned = postProcessTranslation(dict[normClean], lang);
+          memoryCache.set(key, cleaned);
+          return cleaned;
+        }
+        const lowerClean = clean.toLowerCase();
+        for (const [k, v] of Object.entries(dict)) {
+          if (k.toLowerCase() === lowerClean || k.toLowerCase().replace(/\r\n/g, '\n') === normClean.toLowerCase()) {
+            const cleaned = postProcessTranslation(v, lang);
+            memoryCache.set(key, cleaned);
+            return cleaned;
+          }
+        }
       }
     }
   } catch (e) {}
@@ -314,18 +364,73 @@ export function useAutoTranslate(text, currentLang) {
     }
 
     let isMounted = true;
-    fetch(`${getApiBaseUrl()}/api/translate?q=${encodeURIComponent(cleanText)}&to=${lang.toLowerCase()}`)
-      .then(res => res.json())
-      .then(data => {
-        if (isMounted && data && data.translatedText) {
-          const processed = postProcessTranslation(data.translatedText, lang);
-          setCached(lang, cleanText, processed);
-          setTranslated(processed);
+
+    // Multi-tier Translation Engine:
+    // 1. Google Translate GTX directly from browser (fastest ~40ms, zero server dependencies, unthrottled)
+    // 2. Google Translate GTX sl=auto fallback
+    // 3. Backend /api/translate proxy fallback
+    async function executeAutoTranslate() {
+      const tl = lang.toLowerCase();
+
+      // Tier 1: Direct Google Translate GTX (sl=en)
+      try {
+        const urlEn = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${tl}&dt=t&q=${encodeURIComponent(cleanText)}`;
+        const res = await fetch(urlEn);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && Array.isArray(data[0])) {
+            const trans = data[0].map(item => item[0]).join('');
+            if (trans && trans.trim()) {
+              const processed = postProcessTranslation(trans, lang);
+              if (isMounted) {
+                setCached(lang, cleanText, processed);
+                setTranslated(processed);
+              }
+              return;
+            }
+          }
         }
-      })
-      .catch(err => {
-        console.warn('Dynamic translate error:', err);
-      });
+      } catch (e) {}
+
+      // Tier 2: Direct Google Translate GTX (sl=auto)
+      try {
+        const urlAuto = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tl}&dt=t&q=${encodeURIComponent(cleanText)}`;
+        const resAuto = await fetch(urlAuto);
+        if (resAuto.ok) {
+          const data = await resAuto.json();
+          if (Array.isArray(data) && Array.isArray(data[0])) {
+            const trans = data[0].map(item => item[0]).join('');
+            if (trans && trans.trim()) {
+              const processed = postProcessTranslation(trans, lang);
+              if (isMounted) {
+                setCached(lang, cleanText, processed);
+                setTranslated(processed);
+              }
+              return;
+            }
+          }
+        }
+      } catch (e) {}
+
+      // Tier 3: Backend /api/translate proxy fallback
+      try {
+        const apiBase = getApiBaseUrl();
+        const resBack = await fetch(`${apiBase}/api/translate?q=${encodeURIComponent(cleanText)}&to=${tl}`);
+        if (resBack.ok) {
+          const data = await resBack.json();
+          if (data && data.translatedText) {
+            const processed = postProcessTranslation(data.translatedText, lang);
+            if (isMounted) {
+              setCached(lang, cleanText, processed);
+              setTranslated(processed);
+            }
+            return;
+          }
+        }
+      } catch (e) {}
+    }
+
+    executeAutoTranslate();
 
     return () => {
       isMounted = false;

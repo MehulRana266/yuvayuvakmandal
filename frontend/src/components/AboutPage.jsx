@@ -21,16 +21,40 @@ export default function AboutPage() {
     ? (currentLang === 'GU' ? 'રામ નિવાસ સોસાયટી, રાજશ્રી હોલ પાછળ, નવસારી બજાર, સંગ્રામપુરા, સુરત, ગુજરાત - 395002' : 'राम निवास सोसायटी, राजश्री हॉल के पीछे, नवसारी बाजार, संग्रामपुरा, सूरत, गुजरात - 395002')
     : rawAddress;
   const fullAboutHeader = siteData?.fullAboutHeader || t.fullAboutHeader || "ABOUT YUVA YUVAK MANDAL";
-  const fullAboutSubText = siteData?.fullAboutSubText !== undefined ? siteData.fullAboutSubText : (t.fullAboutSubText || "");
+  const isDefaultFullAbout = !siteData?.fullAboutSubText || siteData.fullAboutSubText.toLowerCase().includes('preserving rich cultural heritage');
+  const fullAboutSubText = (currentLang !== 'EN' && isDefaultFullAbout)
+    ? (t.fullAboutSubText || siteData?.fullAboutSubText || "")
+    : (siteData?.fullAboutSubText !== undefined ? siteData.fullAboutSubText : (t.fullAboutSubText || ""));
 
-  const card1Title = siteData?.aboutCard1Title || t.card1Title || "50+ Years Glorious Legacy";
-  const card1Desc = siteData?.aboutCard1Desc !== undefined ? siteData.aboutCard1Desc : (t.card1Desc || "");
+  const isDefaultCard1 = !siteData?.aboutCard1Desc || siteData.aboutCard1Desc.toLowerCase().includes('founded in 1968');
+  const card1Title = (currentLang === 'GU' && (!siteData?.aboutCard1Title || siteData.aboutCard1Title.toLowerCase().includes('50+ years')))
+    ? '50+ વર્ષનો ભવ્ય વારસો'
+    : (currentLang === 'HI' && (!siteData?.aboutCard1Title || siteData.aboutCard1Title.toLowerCase().includes('50+ years')))
+    ? '50+ वर्ष की गौरवशाली विरासत'
+    : (siteData?.aboutCard1Title || "50+ Years Glorious Legacy");
+  const card1Desc = (currentLang !== 'EN' && isDefaultCard1)
+    ? (currentLang === 'GU' ? 'સગરામપુરા, નવસારી બજાર, સુરતના જુસ્સાદાર યુવાનો દ્વારા 1968માં સ્થપાયેલ, યુવા યુવક મંડળ ગુજરાતના સૌથી પ્રતિષ્ઠિત ગણેશ ઉત્સવ મંડળોમાંનું એક બની ગયું છે.' : '1968 में सग्रामपुरा, नवसारी बाज़ार, सूरत के उत्साही युवाओं द्वारा स्थापित, युवा युवक मंडल गुजरात में सबसे सम्मानित गणेश उत्सव मंडलों में से एक बन गया है।')
+    : (siteData?.aboutCard1Desc || "");
 
-  const card2Title = siteData?.aboutCard2Title || t.card2Title || "Cultural Mission & Vision";
-  const card2Desc = siteData?.aboutCard2Desc !== undefined ? siteData.aboutCard2Desc : (t.card2Desc || "");
+  const isDefaultCard2 = !siteData?.aboutCard2Desc || siteData.aboutCard2Desc.toLowerCase().includes('our mission is to preserve');
+  const card2Title = (currentLang === 'GU' && (!siteData?.aboutCard2Title || siteData.aboutCard2Title.toLowerCase().includes('cultural mission')))
+    ? 'સાંસ્કૃતિક મિશન અને વિઝન'
+    : (currentLang === 'HI' && (!siteData?.aboutCard2Title || siteData.aboutCard2Title.toLowerCase().includes('cultural mission')))
+    ? 'सांस्कृतिक मिशन और विजन'
+    : (siteData?.aboutCard2Title || "Cultural Mission & Vision");
+  const card2Desc = (currentLang !== 'EN' && isDefaultCard2)
+    ? (currentLang === 'GU' ? 'અમારું ધ્યેય સમૃદ્ધ સનાતન પરંપરાઓને જાળવી રાખવાનું, આધ્યાત્મિક સંવાદિતાને પ્રોત્સાહન આપવાનું અને સમુદાય નેતૃત્વ અને દૈવી સેવા દ્વારા યુવાનોને સશક્ત કરવાનું છે.' : 'हमारा मिशन समृद्ध सनातन परंपराओं को संरक्षित करना, आध्यात्मिक सद्भाव को बढ़ावा देना और सामुदायिक नेतृत्व और दिव्य सेवा के माध्यम से युवाओं को सशक्त बनाना है।')
+    : (siteData?.aboutCard2Desc || "");
 
-  const card3Title = siteData?.aboutCard3Title || t.card3Title || "A Glorious Legacy of Togetherness";
-  const card3Desc = siteData?.aboutCard3Desc !== undefined ? siteData.aboutCard3Desc : (t.card3Desc || "");
+  const isDefaultCard3 = !siteData?.aboutCard3Desc || siteData.aboutCard3Desc.toLowerCase().includes('this is more than just a celebration');
+  const card3Title = (currentLang === 'GU' && (!siteData?.aboutCard3Title || siteData.aboutCard3Title.toLowerCase().includes('glorious legacy of togetherness')))
+    ? 'એકતાનો ભવ્ય વારસો'
+    : (currentLang === 'HI' && (!siteData?.aboutCard3Title || siteData.aboutCard3Title.toLowerCase().includes('glorious legacy of togetherness')))
+    ? 'एकजुटता की एक गौरवशाली विरासत'
+    : (siteData?.aboutCard3Title || "A Glorious Legacy of Togetherness");
+  const card3Desc = (currentLang !== 'EN' && isDefaultCard3)
+    ? (currentLang === 'GU' ? 'આ માત્ર એક ઉજવણી કરતાં વધુ છે; તે એકતા, ભક્તિ અને સહિયારી યાદોની પરંપરા છે જે આપણા સમગ્ર સમુદાયને વર્ષ-દર વર્ષે સાથે લાવે છે.' : 'यह महज़ एक उत्सव से कहीं अधिक है; यह एकता, भक्ति और साझा यादों की परंपरा है जो हमारे पूरे समुदाय को साल-दर-साल एक साथ लाती है।')
+    : (siteData?.aboutCard3Desc || "");
 
   return (
     <div className="about-page-container mobile-entrance-fade-up" style={{ padding: '40px 20px 40px', maxWidth: '1240px', margin: '0 auto' }}>

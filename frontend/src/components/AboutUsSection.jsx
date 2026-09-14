@@ -16,7 +16,10 @@ export default function AboutUsSection({ onViewFullAbout }) {
   };
 
   const displayAboutHeader = siteData?.homeAboutHeader || t.aboutHeader || "ABOUT US";
-  const displayAboutText = siteData?.aboutText !== undefined ? siteData.aboutText : (t.aboutDesc || "");
+  const isDefaultAbout = !siteData?.aboutText || siteData.aboutText.toLowerCase().includes('inspired by the spirit of devotion');
+  const displayAboutText = (currentLang !== 'EN' && isDefaultAbout)
+    ? (t.aboutDesc || siteData?.aboutText || "")
+    : (siteData?.aboutText !== undefined ? siteData.aboutText : (t.aboutDesc || ""));
 
   return (
     <section id="about" className="about-preview-section" style={{ padding: '38px 20px', maxWidth: '1100px', margin: '0 auto' }}>
