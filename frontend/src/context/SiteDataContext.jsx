@@ -530,17 +530,14 @@ export const getApiBaseUrl = () => {
   }
   // 2. Local development
   if (typeof window !== 'undefined' && window.location) {
-    const { hostname, protocol, port } = window.location;
+    const { hostname } = window.location;
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       return 'http://localhost:5000';
     }
-    // 3. In production: if frontend is served by backend on same domain (port 80/443)
-    if (!port || port === '80' || port === '443') {
-      return window.location.origin;
-    }
-    return `${protocol}//${hostname}:5000`;
+    // 3. Production deployed frontend (Vercel / custom domain) connects to live Render backend
+    return 'https://yuvayuvakmandal-api.onrender.com';
   }
-  return 'http://localhost:5000';
+  return 'https://yuvayuvakmandal-api.onrender.com';
 };
 
 export const resolveMediaUrl = (url) => {
