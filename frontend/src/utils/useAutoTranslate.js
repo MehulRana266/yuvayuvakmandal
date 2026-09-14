@@ -228,10 +228,12 @@ function postProcessTranslation(translatedText, lang) {
 }
 
 function getCached(lang, text) {
-  const glossary = getGlossaryOverride(lang, text);
+  if (!text || !text.trim()) return '';
+  const clean = text.trim();
+  const glossary = getGlossaryOverride(lang, clean);
   if (glossary) return glossary;
 
-  const key = `${lang}:${text.trim()}`;
+  const key = `${lang}:${clean}`;
   if (memoryCache.has(key)) {
     return postProcessTranslation(memoryCache.get(key), lang);
   }
@@ -241,6 +243,18 @@ function getCached(lang, text) {
       const cleaned = postProcessTranslation(stored, lang);
       memoryCache.set(key, cleaned);
       return cleaned;
+    }
+
+    // Check pre-translated siteData dictionary saved from backend
+    const rawSiteData = localStorage.getItem('yuva_site_data');
+    if (rawSiteData) {
+      const parsed = JSON.parse(rawSiteData);
+      const dict = parsed?.translations?.[lang];
+      if (dict && dict[clean]) {
+        const cleaned = postProcessTranslation(dict[clean], lang);
+        memoryCache.set(key, cleaned);
+        return cleaned;
+      }
     }
   } catch (e) {}
   return null;

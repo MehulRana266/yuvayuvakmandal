@@ -414,7 +414,7 @@ app.post('/api/delete-media', (req, res) => {
 });
 
 // ==========================================
-// AUTO TRANSLATION ENGINE (English -> Hindi & Gujarati)
+// AUTO TRANSLATION ENGINE (Google Translate GTX -> Hindi & Gujarati)
 // ==========================================
 const translationCache = new Map();
 
@@ -440,16 +440,10 @@ async function translateText(text, targetLang) {
   }
 
   try {
-    const langpair = `en|${targetLang.toLowerCase()}`;
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(trimmed)}&langpair=${langpair}`;
-    const response = await fetch(url);
-    if (response.ok) {
-      const data = await response.json();
-      if (data && data.responseData && data.responseData.translatedText) {
-        const trans = data.responseData.translatedText;
-        translationCache.set(cacheKey, trans);
-        return trans;
-      }
+    const trans = await fetchGoogleTranslate(trimmed, targetLang.toLowerCase());
+    if (trans && trans.trim()) {
+      translationCache.set(cacheKey, trans.trim());
+      return trans.trim();
     }
   } catch (err) {
     console.warn(`Translation error for "${trimmed}":`, err.message);
@@ -474,6 +468,7 @@ async function autoTranslateSiteData(siteData) {
     'aboutCard2Desc',
     'aboutCard3Title',
     'aboutCard3Desc',
+    'heroHeading',
     'heroTagline',
     'fullScheduleHeader',
     'fullScheduleSubText',
@@ -493,57 +488,120 @@ async function autoTranslateSiteData(siteData) {
     'footerAddressHeading',
     'footerAddressText',
     'footerMapHeading',
-    'footerCopyrightText'
+    'footerCopyrightText',
+    'footerGoogleMapsBtnText'
   ];
 
   const translationPromises = [];
 
+  const recordTranslation = (originalText, fieldKey, targetLang, targetBucket) => {
+    if (!originalText || typeof originalText !== 'string' || !originalText.trim()) return;
+    const clean = originalText.trim();
+    translationPromises.push(
+      translateText(clean, targetLang).then(res => {
+        if (fieldKey) targetBucket[fieldKey] = res;
+        targetBucket[clean] = res;
+      })
+    );
+  };
+
   for (const field of textFields) {
     if (siteData[field] && typeof siteData[field] === 'string') {
-      const val = siteData[field];
-      translationPromises.push(
-        translateText(val, 'hi').then(res => { siteData.translations.HI[field] = res; }),
-        translateText(val, 'gu').then(res => { siteData.translations.GU[field] = res; })
-      );
+      recordTranslation(siteData[field], field, 'hi', siteData.translations.HI);
+      recordTranslation(siteData[field], field, 'gu', siteData.translations.GU);
     }
   }
 
-  if (siteData.murtikar && typeof siteData.murtikar === 'object') {
-    if (siteData.murtikar.name) {
-      translationPromises.push(
-        translateText(siteData.murtikar.name, 'hi').then(res => { siteData.translations.HI.murtikarName = res; }),
-        translateText(siteData.murtikar.name, 'gu').then(res => { siteData.translations.GU.murtikarName = res; })
-      );
-    }
-    if (siteData.murtikar.badge) {
-      translationPromises.push(
-        translateText(siteData.murtikar.badge, 'hi').then(res => { siteData.translations.HI.murtikarBadge = res; }),
-        translateText(siteData.murtikar.badge, 'gu').then(res => { siteData.translations.GU.murtikarBadge = res; })
-      );
-    }
-    if (siteData.murtikar.tagline) {
-      translationPromises.push(
-        translateText(siteData.murtikar.tagline, 'hi').then(res => { siteData.translations.HI.murtikarTagline = res; }),
-        translateText(siteData.murtikar.tagline, 'gu').then(res => { siteData.translations.GU.murtikarTagline = res; })
-      );
-    }
-    if (siteData.murtikar.headerTitle) {
-      translationPromises.push(
-        translateText(siteData.murtikar.headerTitle, 'hi').then(res => { siteData.translations.HI.murtikarHeaderTitle = res; }),
-        translateText(siteData.murtikar.headerTitle, 'gu').then(res => { siteData.translations.GU.murtikarHeaderTitle = res; })
-      );
-    }
-  }
-
+  // 5-line hero banner title
   if (Array.isArray(siteData.heroHeadingLines)) {
     translationPromises.push(
       Promise.all(siteData.heroHeadingLines.map(line => translateText(line, 'hi'))).then(lines => {
         siteData.translations.HI.heroHeadingLines = lines;
+        lines.forEach((l, i) => {
+          if (siteData.heroHeadingLines[i]) {
+            siteData.translations.HI[siteData.heroHeadingLines[i].trim()] = l;
+          }
+        });
       }),
       Promise.all(siteData.heroHeadingLines.map(line => translateText(line, 'gu'))).then(lines => {
         siteData.translations.GU.heroHeadingLines = lines;
+        lines.forEach((l, i) => {
+          if (siteData.heroHeadingLines[i]) {
+            siteData.translations.GU[siteData.heroHeadingLines[i].trim()] = l;
+          }
+        });
       })
     );
+  }
+
+  // Hero tagline lines
+  if (Array.isArray(siteData.heroTaglineLines)) {
+    translationPromises.push(
+      Promise.all(siteData.heroTaglineLines.map(line => translateText(line, 'hi'))).then(lines => {
+        siteData.translations.HI.heroTaglineLines = lines;
+        lines.forEach((l, i) => {
+          if (siteData.heroTaglineLines[i]) {
+            siteData.translations.HI[siteData.heroTaglineLines[i].trim()] = l;
+          }
+        });
+      }),
+      Promise.all(siteData.heroTaglineLines.map(line => translateText(line, 'gu'))).then(lines => {
+        siteData.translations.GU.heroTaglineLines = lines;
+        lines.forEach((l, i) => {
+          if (siteData.heroTaglineLines[i]) {
+            siteData.translations.GU[siteData.heroTaglineLines[i].trim()] = l;
+          }
+        });
+      })
+    );
+  }
+
+  // Murtikar section
+  if (siteData.murtikar && typeof siteData.murtikar === 'object') {
+    const murtikarFields = ['name', 'badge', 'tagline', 'headerTitle'];
+    murtikarFields.forEach(f => {
+      if (siteData.murtikar[f]) {
+        const keyName = `murtikar${f.charAt(0).toUpperCase() + f.slice(1)}`;
+        recordTranslation(siteData.murtikar[f], keyName, 'hi', siteData.translations.HI);
+        recordTranslation(siteData.murtikar[f], keyName, 'gu', siteData.translations.GU);
+      }
+    });
+  }
+
+  // Contact Info section
+  if (siteData.contactInfo && typeof siteData.contactInfo === 'object') {
+    const contactFields = ['address', 'headerTitle', 'subText', 'formHeader', 'formSubText', 'socialMediaHeader', 'socialMediaDesc'];
+    contactFields.forEach(f => {
+      if (siteData.contactInfo[f]) {
+        const keyName = `contact${f.charAt(0).toUpperCase() + f.slice(1)}`;
+        recordTranslation(siteData.contactInfo[f], keyName, 'hi', siteData.translations.HI);
+        recordTranslation(siteData.contactInfo[f], keyName, 'gu', siteData.translations.GU);
+      }
+    });
+  }
+
+  // Schedule Events (Dynamic addition of new events, titles, descriptions, locations)
+  if (Array.isArray(siteData.scheduleEvents)) {
+    siteData.scheduleEvents.forEach(evt => {
+      if (!evt || typeof evt !== 'object') return;
+      ['title', 'desc', 'location', 'day', 'category'].forEach(field => {
+        if (evt[field] && typeof evt[field] === 'string') {
+          recordTranslation(evt[field], null, 'hi', siteData.translations.HI);
+          recordTranslation(evt[field], null, 'gu', siteData.translations.GU);
+        }
+      });
+    });
+  }
+
+  // Big Screen Videos (Dynamic addition of new video titles)
+  if (Array.isArray(siteData.bigScreenVideos)) {
+    siteData.bigScreenVideos.forEach(vid => {
+      if (!vid || typeof vid !== 'object') return;
+      if (vid.title && typeof vid.title === 'string') {
+        recordTranslation(vid.title, null, 'hi', siteData.translations.HI);
+        recordTranslation(vid.title, null, 'gu', siteData.translations.GU);
+      }
+    });
   }
 
   await Promise.allSettled(translationPromises);
