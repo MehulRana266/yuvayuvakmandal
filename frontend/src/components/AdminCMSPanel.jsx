@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { SiteDataContext, getApiBaseUrl, calculateFullFestivalTimeline, getCurrentFestivalDayInfo, getComputedTodaysEvents, sortScheduleEvents } from '../context/SiteDataContext';
+import { SiteDataContext, getApiBaseUrl, resolveMediaUrl, calculateFullFestivalTimeline, getCurrentFestivalDayInfo, getComputedTodaysEvents, sortScheduleEvents } from '../context/SiteDataContext';
 import { LanguageContext } from '../context/LanguageContext';
 import { 
   Settings, 
