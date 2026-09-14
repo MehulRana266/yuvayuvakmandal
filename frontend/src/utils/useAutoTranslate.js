@@ -8,6 +8,22 @@ const CACHE_PREFIX = 'trans_v4_';
 // 🚩 Instant Client-Side Glossary for Devotional & Festival Terms
 const CLIENT_GLOSSARY = {
   HI: {
+    'the king of': 'राजा',
+    'the king of yuva yuvak mandal': 'युवा युवक मंडल के राजा',
+    'the king of yuva yuvak mandal is arriving on 12-09-2026': 'युवा युवक मंडल के राजा का आगमन 12-09-2026 को हो रहा है',
+    'is arriving': 'पधार रहे हैं',
+    'on 12-09-2026': '12-09-2026 को',
+    'bappa is arriving! please join us for the ganesh aagman ceremony.': 'बाप्पा पधार रहे हैं! गणेश आगमन उत्सव में आप सभी का सहर्ष स्वागत है।',
+    'countdown to utsav': 'उत्सव की उल्टी गिनती',
+    'days': 'दिन',
+    'hours': 'घंटे',
+    'mins': 'मिनट',
+    'secs': 'सेकंड',
+    'feel the devotion - on the big screen': 'भक्ति का अनुभव - बड़ी स्क्रीन पर',
+    'feel the devotion – on the big screen': 'भक्ति का अनुभव - बड़ी स्क्रीन पर',
+    'feel the devotion — on the big screen': 'भक्ति का अनुभव - बड़ी स्क्रीन पर',
+    'watch hd live darshan & grand aarti stream.': 'एचडी लाइव दर्शन और भव्य महाआरती का सीधा प्रसारण देखें।',
+    'video coming soon': 'वीडियो जल्द आ रहा है',
     'aagman': 'आगमन',
     'visarjan': 'विसर्जन',
     'schedule': 'शेड्यूल',
@@ -48,9 +64,50 @@ const CLIENT_GLOSSARY = {
     'crafted with devotion in mumbai • revered in surat ganesh-utsav': 'मुंबई में भक्तिभाव से निर्मित और सूरत गणेश-उत्सव में आदरणीय',
     'crafted with devotion in mumbai and revered in surat ganesh-utsav': 'मुंबई में भक्तिभाव से निर्मित और सूरत गणेश-उत्सव में आदरणीय',
     'crafted with devotion in mumbai, revered in surat ganesh-utsav': 'मुंबई में भक्तिभाव से निर्मित और सूरत गणेश-उत्सव में आदरणीय',
-    'divine creation - our idol sculptor': 'दिव्य सृजन - हमारे मूर्तिकार'
+    'divine creation - our idol sculptor': 'दिव्य सृजन - हमारे मूर्तिकार',
+    'all rights reserved': 'सर्वाधिकार सुरक्षित',
+    'all rights reserved.': 'सर्वाधिकार सुरक्षित.',
+    'yuva yuvak mandal. all rights reserved': 'युवा युवक मंडल. सर्वाधिकार सुरक्षित',
+    'yuva yuvak mandal. all rights reserved.': 'युवा युवक मंडल. सर्वाधिकार सुरक्षित.',
+    'about us': 'हमारे बारे में',
+    'about yuva yuvak mandal': 'युवा युवक मंडल के बारे में',
+    'contact yuva yuvak mandal': 'युवा युवक मंडल से संपर्क करें',
+    'surat, gujarat': 'सूरत, गुजरात',
+    'shri ganesh utsav mahotsav • organised with devotion, grandeur and unity since 1968 in surat, gujarat.': 'श्री गणेश उत्सव महोत्सव • सूरत, गुजरात में 1968 से भक्ति, भव्यता और एकता के साथ आयोजित।',
+    'shri ganesh utsav mahotsav - organised with devotion, grandeur and unity since 1968 in surat, gujarat.': 'श्री गणेश उत्सव महोत्सव • सूरत, गुजरात में 1968 से भक्ति, भव्यता और एकता के साथ आयोजित।',
+    'devotee experiences & reviews': 'भक्त अनुभव एवं समीक्षाएं',
+    'devotee feedback & blessings': 'भक्तों की प्रतिक्रिया एवं अनुभव',
+    'share your divine experience and blessings of shri ganesh utsav mahotsav!': 'श्री गणेश उत्सव के अपने दिव्य अनुभव एवं आशीर्वाद साझा करें!',
+    'glorious celebrations': 'गौरवशाली वर्ष',
+    'dedicated volunteers': 'समर्पित स्वयंसेवक',
+    'blessed devotees': 'आनंदित भक्त',
+    'view full schedule →': 'पूरा शेड्यूल देखें →',
+    'read full about us →': 'हमारे बारे में पूरी जानकारी पढ़ें →',
+    'today\'s schedule': 'आज का शेड्यूल',
+    'no more schedule': 'आज का कोई अन्य कार्यक्रम शेष नहीं है',
+    'latest reels from instagram': 'इंस्टाग्राम से नवीनतम रील्स',
+    'divine photo & video gallery': 'दिव्य फोटो एवं वीडियो गैलरी',
+    'divine aarti & utsav schedule': 'दिव्य आरती एवं उत्सव सारणी',
+    'sacred pandal address': 'पवित्र पंडाल स्थान',
+    'click to view': 'देखने के लिए क्लिक करें'
   },
   GU: {
+    'the king of': 'રાજા',
+    'the king of yuva yuvak mandal': 'યુવા યુવક મંડળના રાજા',
+    'the king of yuva yuvak mandal is arriving on 12-09-2026': 'યુવા યુવક મંડળના રાજાનું આગમન 12-09-2026 ના રોજ થઈ રહ્યું છે',
+    'is arriving': 'પધારી રહ્યા છે',
+    'on 12-09-2026': '12-09-2026 ના રોજ',
+    'bappa is arriving! please join us for the ganesh aagman ceremony.': 'બાપ્પા પધારી રહ્યા છે! ગણેશ આગમન મહોત્સવમાં આપ સૌનું હાર્દિક સ્વાગત છે.',
+    'countdown to utsav': 'મહોત્સવની ઊંધી ગણતરી',
+    'days': 'દિવસ',
+    'hours': 'કલાક',
+    'mins': 'મિનિટ',
+    'secs': 'સેકન્ડ',
+    'feel the devotion - on the big screen': 'ભક્તિનો અનુભવ - બિગ સ્ક્રીન પર',
+    'feel the devotion – on the big screen': 'ભક્તિનો અનુભવ - બિગ સ્ક્રીન પર',
+    'feel the devotion — on the big screen': 'ભક્તિનો અનુભવ - બિગ સ્ક્રીન પર',
+    'watch hd live darshan & grand aarti stream.': 'એચડી લાઈવ દર્શન અને ભવ્ય મહાઆરતીનું સીધું પ્રસારણ જુઓ.',
+    'video coming soon': 'વિડિયો ટૂંક સમયમાં આવી રહ્યો છે',
     'aagman': 'આગમન',
     'visarjan': 'વિસર્જન',
     'schedule': 'શિડ્યુલ',
@@ -91,17 +148,66 @@ const CLIENT_GLOSSARY = {
     'crafted with devotion in mumbai • revered in surat ganesh-utsav': 'મુંબઈમાં ભક્તિ સાથે રચાયેલ અને સુરત ગણેશ-ઉત્સવમાં આદરણીય',
     'crafted with devotion in mumbai and revered in surat ganesh-utsav': 'મુંબઈમાં ભક્તિ સાથે રચાયેલ અને સુરત ગણેશ-ઉત્સવમાં આદરણીય',
     'crafted with devotion in mumbai, revered in surat ganesh-utsav': 'મુંબઈમાં ભક્તિ સાથે રચાયેલ અને સુરત ગણેશ-ઉત્સવમાં આદરણીય',
-    'divine creation - our idol sculptor': 'દિવ્ય સર્જન - આપણા મૂર્તિકાર'
+    'divine creation - our idol sculptor': 'દિવ્ય સર્જન - આપણા મૂર્તિકાર',
+    'all rights reserved': 'સર્વ હક સુરક્ષિત',
+    'all rights reserved.': 'સર્વ હક સુરક્ષિત.',
+    'yuva yuvak mandal. all rights reserved': 'યુવા યુવક મંડળ. સર્વ હક સુરક્ષિત',
+    'yuva yuvak mandal. all rights reserved.': 'યુવા યુવક મંડળ. સર્વ હક સુરક્ષિત.',
+    'about us': 'અમારા વિશે',
+    'about yuva yuvak mandal': 'યુવા યુવક મંડળ વિશે',
+    'contact yuva yuvak mandal': 'યુવા યુવક મંડળ સંપર્ક વિગત',
+    'surat, gujarat': 'સુરત, ગુજરાત',
+    'shri ganesh utsav mahotsav • organised with devotion, grandeur and unity since 1968 in surat, gujarat.': 'શ્રી ગણેશ ઉત્સવ મહોત્સવ • સુરત, ગુજરાતમાં ૧૯૬૮ થી ભક્તિ, ભવ્યતા અને એકતા સાથે આયોજિત.',
+    'shri ganesh utsav mahotsav - organised with devotion, grandeur and unity since 1968 in surat, gujarat.': 'શ્રી ગણેશ ઉત્સવ મહોત્સવ • સુરત, ગુજરાતમાં ૧૯૬૮ થી ભક્તિ, ભવ્યતા અને એકતા સાથે આયોજિત.',
+    'devotee experiences & reviews': 'ભક્ત અનુભવ અને સમીક્ષાઓ',
+    'devotee feedback & blessings': 'ભક્તોનો પ્રતિભાવ અને આશીર્વાદ',
+    'share your divine experience and blessings of shri ganesh utsav mahotsav!': 'શ્રી ગણેશ ઉત્સવના આપના દિવ્ય અનુભવ અને આશીર્વાદ જણાવો!',
+    'glorious celebrations': 'ગૌરવશાળી વર્ષો',
+    'dedicated volunteers': 'સક્રિય સ્વયંસેવકો',
+    'blessed devotees': 'દર્શનાર્થી ભક્તો',
+    'view full schedule →': 'પૂરું શિડ્યુલ જુઓ →',
+    'read full about us →': 'અમારા વિશે સંપૂર્ણ વિગત વાંચો →',
+    'today\'s schedule': 'આજનું શિડ્યુલ',
+    'no more schedule': 'આજનો કોઈ અન્ય કાર્યક્રમ બાકી નથી',
+    'latest reels from instagram': 'ઇન્સ્ટાગ્રામ પરથી લેટેસ્ટ રીલ્સ',
+    'divine photo & video gallery': 'દિવ્ય ફોટો અને વિડિયો ગેલેરી',
+    'divine aarti & utsav schedule': 'દિવ્ય આરતી અને ઉત્સવ શિડ્યુલ',
+    'sacred pandal address': 'પવિત્ર મંડપ સરનામું',
+    'click to view': 'જોવા માટે ક્લિક કરો'
   }
 };
 
 function getGlossaryOverride(lang, text) {
   if (!text || !lang) return null;
   const l = String(lang).toUpperCase();
-  const lower = text.trim().toLowerCase();
-  if (CLIENT_GLOSSARY[l] && CLIENT_GLOSSARY[l][lower]) {
+  if (!CLIENT_GLOSSARY[l]) return null;
+
+  const raw = text.trim();
+  const lower = raw.toLowerCase();
+
+  // 1. Direct dictionary match
+  if (CLIENT_GLOSSARY[l][lower]) {
     return CLIENT_GLOSSARY[l][lower];
   }
+
+  // 2. Normalized dashes & stripped trailing punctuation match
+  const normalized = lower.replace(/[–—]/g, '-').replace(/[.!?🚩\s]+$/, '');
+  if (CLIENT_GLOSSARY[l][normalized]) {
+    return CLIENT_GLOSSARY[l][normalized];
+  }
+
+  // 3. Dynamic Date pattern e.g. "on 12-09-2026"
+  const dateMatch = raw.match(/^on\s+(\d{2}-\d{2}-\d{4})$/i);
+  if (dateMatch) {
+    return l === 'GU' ? `${dateMatch[1]} ના રોજ` : `${dateMatch[1]} को`;
+  }
+
+  // 4. Dynamic Year count e.g. "50+ Years"
+  const yearMatch = raw.match(/^(\d+\+)\s*years?$/i);
+  if (yearMatch) {
+    return l === 'GU' ? `${yearMatch[1]} વર્ષ` : `${yearMatch[1]} वर्ष`;
+  }
+
   return null;
 }
 

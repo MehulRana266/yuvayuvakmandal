@@ -570,7 +570,7 @@ export default function BigScreenVideo() {
                       textTransform: 'uppercase',
                       fontFamily: "'Outfit', sans-serif"
                     }}>
-                      {currentVideo.title}
+                      <Translate text={currentVideo.title} />
                     </span>
                   </div>
                 </div>

@@ -379,6 +379,33 @@ export default function HeroBanner({ activeView = 'home' }) {
       .filter(item => item.text.length > 0);
   })();
 
+  const getRenderedLineText = (item, idx) => {
+    if (currentLang === 'EN') return item.text;
+
+    // Check if the current lines match the standard default 4-line arrival banner
+    const isStandardBanner = linesToRender.length >= 4 &&
+      linesToRender[0]?.text?.toLowerCase() === 'the king of' &&
+      linesToRender[1]?.text?.toLowerCase() === 'yuva yuvak mandal' &&
+      linesToRender[2]?.text?.toLowerCase() === 'is arriving';
+
+    if (isStandardBanner) {
+      if (idx === 0) {
+        return currentLang === 'GU' ? 'યુવા યુવક મંડળ' : 'युवा युवक मंडल';
+      }
+      if (idx === 1) {
+        return currentLang === 'GU' ? 'ના રાજા' : 'के राजा';
+      }
+      if (idx === 2) {
+        return currentLang === 'GU' ? 'પધારી રહ્યા છે' : 'पधार रहे हैं';
+      }
+      if (idx === 3) {
+        return <Translate text={item.text} />;
+      }
+    }
+
+    return <Translate text={item.text} />;
+  };
+
   return (
     <section id="hero" ref={heroRef} className="hero-banner-section" style={{
       position: 'relative',
@@ -750,14 +777,15 @@ export default function HeroBanner({ activeView = 'home' }) {
           }}>
             {linesToRender.map((item, idx) => {
               const isHighlight = String(siteData.heroHeadingHighlightLine) === item.lineNum;
+              const content = getRenderedLineText(item, idx);
               return (
                 <React.Fragment key={idx}>
                   {isHighlight ? (
                     <span style={{ color: '#FFE082', textShadow: '0 0 18px rgba(255,224,130,0.6)' }}>
-                      {item.text}
+                      {content}
                     </span>
                   ) : (
-                    item.text
+                    content
                   )}
                   {idx < linesToRender.length - 1 && <br />}
                 </React.Fragment>

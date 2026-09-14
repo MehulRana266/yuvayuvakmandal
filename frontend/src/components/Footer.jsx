@@ -77,12 +77,12 @@ export default function Footer({ onNavigate, onOpenAdmin }) {
               target="_blank"
               rel="noopener noreferrer"
               className="insta-expand-btn"
-              title="Join Instagram Community"
+              title={t.footerJoinInsta || "Join Instagram Community"}
             >
               <div className="insta-expand-icon-box">
                 <Instagram size={20} color="#E1306C" />
               </div>
-              <span className="insta-expand-text">Join Instagram Community</span>
+              <span className="insta-expand-text">{t.footerJoinInsta || "Join Instagram Community"}</span>
             </a>
           </div>
         </div>
@@ -163,10 +163,15 @@ export default function Footer({ onNavigate, onOpenAdmin }) {
           alignItems: 'center'
         }}
       >
-        {siteData?.footerCopyrightText 
-          ? `© ${siteData.footerCopyrightText}`
-          : `© ${currentYear} ${currentLang === 'GU' ? 'યુવા યુવક મંડળ' : currentLang === 'HI' ? 'युवा युवक मंडल' : (siteData?.mandalName ? siteData.mandalName.replace('🚩', '').trim() : 'Yuva Yuvak Mandal')}. All rights reserved.`
-        }
+        {(() => {
+          const mandalNamePart = currentLang === 'GU' ? 'યુવા યુવક મંડળ' : currentLang === 'HI' ? 'युवा युवक मंडल' : (siteData?.mandalName ? siteData.mandalName.replace('🚩', '').trim() : 'Yuva Yuvak Mandal');
+          const rightsPart = currentLang === 'GU' ? 'સર્વ હક સુરક્ષિત.' : currentLang === 'HI' ? 'सर्वाधिकार सुरक्षित.' : 'All rights reserved.';
+          const rawRights = siteData?.footerCopyrightText;
+          if (rawRights && !rawRights.toLowerCase().includes('all rights reserved') && !rawRights.toLowerCase().includes('yuva yuvak mandal')) {
+            return `© ${rawRights}`;
+          }
+          return `© ${currentYear} ${mandalNamePart}. ${rightsPart}`;
+        })()}
       </div>
     </footer>
   );

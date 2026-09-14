@@ -556,22 +556,10 @@ app.post('/api/translate', async (req, res) => {
     const { text, texts, to } = req.body;
     const targetLang = (to || 'hi').toLowerCase();
     if (texts && Array.isArray(texts)) {
-      const results = await Promise.all(texts.map(t => translateText(t, targetLang)));
+      const results = await Promise.all(texts.map(t => fetchGoogleTranslate(t, targetLang)));
       return res.json({ success: true, results });
     }
-    const result = await translateText(text, targetLang);
-    res.json({ success: true, translatedText: result });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get('/api/translate', async (req, res) => {
-  try {
-    const { q, to } = req.query;
-    if (!q) return res.status(400).json({ error: 'Text "q" is required' });
-    const targetLang = (to || 'hi').toLowerCase();
-    const result = await translateText(q, targetLang);
+    const result = await fetchGoogleTranslate(text, targetLang);
     res.json({ success: true, translatedText: result });
   } catch (err) {
     res.status(500).json({ error: err.message });
