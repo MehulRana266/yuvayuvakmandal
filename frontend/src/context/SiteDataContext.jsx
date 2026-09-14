@@ -543,11 +543,16 @@ export const getApiBaseUrl = () => {
 export const resolveMediaUrl = (url) => {
   if (!url) return '';
   const apiBase = getApiBaseUrl();
-  if (url.startsWith('http://localhost:5000')) {
-    return url.replace('http://localhost:5000', apiBase);
+
+  // If it's an uploaded file (like /uploads/... or http://localhost:.../uploads/...)
+  const uploadMatch = url.match(/\/uploads\/([^\/\?#]+)/);
+  if (uploadMatch) {
+    const filename = uploadMatch[1];
+    return `/uploads/${filename}`;
   }
-  if (url.startsWith('/uploads/')) {
-    return `${apiBase}${url}`;
+
+  if (url.includes('localhost:') || url.includes('127.0.0.1:')) {
+    return url.replace(/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?/, apiBase);
   }
   return url;
 };

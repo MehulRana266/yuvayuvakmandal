@@ -98,7 +98,7 @@ app.post('/api/upload', (req, res) => {
       console.log(`♻️ Reusing existing media file (deduplicated): ${safeName}`);
     }
 
-    const publicUrl = `http://localhost:${PORT}/uploads/${safeName}`;
+    const publicUrl = `/uploads/${safeName}`;
     return res.json({ success: true, url: publicUrl });
   } catch (err) {
     console.error('File Upload Error:', err);

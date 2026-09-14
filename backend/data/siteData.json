@@ -14,17 +14,17 @@
   "heroTagline": "Bappa is arriving! Please join us for the Ganesh Aagman ceremony.",
   "bannerMediaType": "video",
   "bannerImageUrl": "",
-  "bannerVideoUrl": "http://localhost:5000/uploads/media-1788295156175-5851.mp4",
+  "bannerVideoUrl": "/uploads/media-1788295156175-5851.mp4",
   "bannerTextAlignment": "center",
   "bannerVideoSound": "off",
   "fullScheduleHeader": "DIVINE AARTI & UTSAV SCHEDULE",
   "fullScheduleSubText": "Explore the complete 10-day event timeline, daily Aarti timings, Sattvik Mahaprasad, cultural programs, and Aagman/Visarjan highlights.",
-  "videoUrl": "http://localhost:5000/uploads/media-1788295193861-43921.mp4",
+  "videoUrl": "/uploads/media-1788295193861-43921.mp4",
   "bigScreenVideos": [
     {
       "id": 1789137734001,
       "title": "2022",
-      "url": "http://localhost:5000/uploads/media-1788295193861-43921.mp4"
+      "url": "/uploads/media-1788295193861-43921.mp4"
     }
   ],
   "homeAboutHeader": "ABOUT US",
@@ -70,16 +70,13 @@
   "reels": [],
   "inquiries": [
     {
-      "_id": "6aa6f3f2e64f2ac017596a4d",
+      "_id": "6aa7d5736686ba7d8f3b1d0d",
       "id": 1789326322120,
       "name": "Mehul",
       "phone": "8469474973",
       "subject": "General Inquiry",
       "message": "qedqed",
-      "date": "14 Sept 2026, 12:35 AM",
-      "createdAt": "2026-09-13T19:05:22.134Z",
-      "updatedAt": "2026-09-13T19:05:22.134Z",
-      "__v": 0
+      "date": "14 Sept 2026, 12:35 AM"
     }
   ],
   "donations": [],
@@ -177,18 +174,23 @@
     }
   ],
   "events": [],
-  "_id": "6a91b1766bb1be3d52d40e83",
+  "_id": "6aa7d576f136a2291e741a75",
   "key": "main",
-  "visarjanDate": "",
-  "updatedAt": "2026-09-13T19:05:22.175Z",
-  "simulatedDay": "auto",
   "__v": 0,
+  "adminPassword": "mehul",
   "galleryHeaderSubText": "",
   "galleryHeaderTitle": "",
   "heroTaglineLines": [
     "Bappa is arriving! Please join us for the Ganesh Aagman ceremony.",
     ""
   ],
+  "murtikar": {
+    "name": "Kiran Manjrekar",
+    "badge": "RESPECTED IDOL SCULPTOR - MUMBAI",
+    "tagline": "Crafted with Devotion in Mumbai and Revered in Surat Ganesh-Utsav",
+    "photo": ""
+  },
+  "simulatedDay": "auto",
   "translations": {
     "HI": {
       "heroTagline": "बप्पा आ रहे हैं! कृपया गणेश आगमान समारोह में हमारे साथ शामिल हों।",
@@ -212,7 +214,7 @@
       "footerMandalTagline": "श्री गणेश उत्सव महोत्सव • गुजरात के सूरत में 1968 से भक्ति, भव्यता और एकता के साथ आयोजित किया गया।",
       "footerAddressHeading": "पंडाल का पता",
       "footerAddressText": "युवा युवा मंडल, राम निवास सोसाइटी, राजेश्री हॉल के पीछे, नवसारी बाजार, सगरामपुरा, सूरत, गुजरात - 395002",
-      "footerMapHeading": "Map Location & Street View",
+      "footerMapHeading": "मैप लोकेशन और स्ट्रीट व्यू",
       "reelsHeaderSubText": "हमारे आधिकारिक इंस्टाग्राम पेज @ yuva_yuvak_mandal से नवीनतम भक्ति क्षण और उत्सव रील देखें 🚩",
       "bigScreenHeaderTitle": "भक्ति महसूस करें - बड़े पर्दे पर",
       "footerCopyrightText": "युवा युवा मंडल। सर्वाधिकार सुरक्षित",
@@ -271,11 +273,6 @@
       "murtikarName": "કિરણ માંજરેકર"
     }
   },
-  "adminPassword": "mehul",
-  "murtikar": {
-    "name": "Kiran Manjrekar",
-    "badge": "RESPECTED IDOL SCULPTOR - MUMBAI",
-    "tagline": "Crafted with Devotion in Mumbai and Revered in Surat Ganesh-Utsav",
-    "photo": ""
-  }
+  "updatedAt": "2026-09-13T19:05:22.175Z",
+  "visarjanDate": ""
 }
