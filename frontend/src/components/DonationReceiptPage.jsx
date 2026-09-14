@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { Printer, Download, Share2, ArrowLeft, Check, ShieldCheck, Home, FileText } from 'lucide-react';
 import { getApiBaseUrl } from '../context/SiteDataContext';
+import { LanguageContext } from '../context/LanguageContext';
 
 export default function DonationReceiptPage({ onGoToHome }) {
+  const { t, currentLang } = useContext(LanguageContext);
   const [donation, setDonation] = useState(null);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -282,7 +284,7 @@ export default function DonationReceiptPage({ onGoToHome }) {
             gap: '6px'
           }}
         >
-          <ArrowLeft size={16} /> Home Website
+          <ArrowLeft size={16} /> {t.receiptBackHome || 'Home Website'}
         </button>
 
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -304,7 +306,7 @@ export default function DonationReceiptPage({ onGoToHome }) {
               boxShadow: '0 4px 15px rgba(211,47,47,0.4)'
             }}
           >
-            <FileText size={15} /> {downloading ? 'Generating PDF...' : 'Download PDF (पावती PDF)'}
+            <FileText size={15} /> {downloading ? (t.loading || 'Generating PDF...') : (t.receiptDownloadPdf || 'Download PDF (पावती PDF)')}
           </button>
 
           <button
@@ -324,7 +326,7 @@ export default function DonationReceiptPage({ onGoToHome }) {
               boxShadow: '0 4px 15px rgba(255,215,0,0.4)'
             }}
           >
-            <Printer size={15} /> Print Slip / Save PDF
+            <Printer size={15} /> {t.printReceipt || 'Print Slip / Save PDF'}
           </button>
 
           <button
@@ -344,7 +346,7 @@ export default function DonationReceiptPage({ onGoToHome }) {
               gap: '6px'
             }}
           >
-            <Download size={15} /> {downloading ? 'Downloading...' : 'Slip Image (PNG)'}
+            <Download size={15} /> {downloading ? (t.loading || 'Downloading...') : (t.receiptDownloadPng || 'Slip Image (PNG)')}
           </button>
 
           <button
@@ -363,7 +365,7 @@ export default function DonationReceiptPage({ onGoToHome }) {
               gap: '6px'
             }}
           >
-            <Share2 size={15} /> WhatsApp
+            <Share2 size={15} /> {t.receiptShareWhatsapp || 'WhatsApp'}
           </button>
         </div>
       </div>

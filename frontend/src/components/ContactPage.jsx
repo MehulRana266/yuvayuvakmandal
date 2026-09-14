@@ -56,23 +56,23 @@ export default function ContactPage() {
     let hasError = false;
 
     if (!formData.name || !formData.name.trim()) {
-      newErrors.name = currentLang === 'HI' ? '(नाम आवश्यक है)' : currentLang === 'GU' ? '(નામ જરૂરી છે)' : '(Required)';
+      newErrors.name = t.requiredField || (currentLang === 'HI' ? '(नाम आवश्यक है)' : currentLang === 'GU' ? '(નામ જરૂરી છે)' : '(Required)');
       hasError = true;
     }
 
     const cleanPhone = (formData.phone || '').replace(/\D/g, '');
     if (!cleanPhone || cleanPhone.length !== 10) {
-      newErrors.phone = currentLang === 'HI' ? '(10 अंकों का मान्य नंबर दर्ज करें)' : currentLang === 'GU' ? '(10 અંકનો નંબર હોવો જોઈએ)' : '(Must be 10 digits)';
+      newErrors.phone = t.phoneValidation || (currentLang === 'HI' ? '(10 अंकों का मान्य नंबर दर्ज करें)' : currentLang === 'GU' ? '(10 અંકનો નંબર હોવો જોઈએ)' : '(Must be 10 digits)');
       hasError = true;
     }
 
     if (!formData.subject || !formData.subject.trim()) {
-      newErrors.subject = currentLang === 'HI' ? '(पूछताछ का प्रकार चुनें)' : currentLang === 'GU' ? '(પૂછપરછનો પ્રકાર પસંદ કરો)' : '(Please select an inquiry)';
+      newErrors.subject = t.selectInquiryError || (currentLang === 'HI' ? '(पूछताछ का प्रकार चुनें)' : currentLang === 'GU' ? '(પૂછપરછનો પ્રકાર પસંદ કરો)' : '(Please select an inquiry)');
       hasError = true;
     }
 
     if (!formData.message || !formData.message.trim()) {
-      newErrors.message = currentLang === 'HI' ? '(संदेश आवश्यक है)' : currentLang === 'GU' ? '(સંદેશ લખવો જરૂરી છે)' : '(Required)';
+      newErrors.message = t.requiredField || (currentLang === 'HI' ? '(संदेश आवश्यक है)' : currentLang === 'GU' ? '(સંદેશ લખવો જરૂરી છે)' : '(Required)');
       hasError = true;
     }
 

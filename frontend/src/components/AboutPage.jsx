@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { LanguageContext } from '../context/LanguageContext';
 import { SiteDataContext } from '../context/SiteDataContext';
 import { Heart, Users, Trophy, MapPin, Instagram, Calendar, ShieldCheck, Sparkles, ExternalLink } from 'lucide-react';
-import { useAutoTranslate, Translate } from '../utils/useAutoTranslate';
+import { useAutoTranslate, Translate, resolveDynamicContent } from '../utils/useAutoTranslate';
 
 export default function AboutPage() {
   const { t, currentLang } = useContext(LanguageContext);
@@ -11,50 +11,21 @@ export default function AboutPage() {
   const gmapsUrl = siteData?.contactInfo?.gmapsUrl || "https://www.google.com/maps/place/Ram+Nivas+Society,+Navsari+Bazaar,+Surat,+Gujarat+395002,+India/@21.1871118,72.825237,3a,75y,337.92h,85.85t/data=!3m7!1e1!3m5!1srqOE0FbUYi8YMVZEIz6Jjw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D4.147363467408482%26panoid%3DrqOE0FbUYi8YMVZEIz6Jjw%26yaw%3D337.91676810130474!7i16384!8i8192!4m15!1m8!3m7!1s0x3be04e687e62c5af:0xcd4ddfde3a15fae7!2sRam+Nivas+Society,+Navsari+Bazaar,+Surat,+Gujarat+395002,+India!3b1!8m2!3d21.1874551!4d72.8251338!16s%2Fg%2F11x91lcrh1!3m5!1s0x3be04e687e62c5af:0xcd4ddfde3a15fae7!8m2!3d21.1874551!4d72.8251338!16s%2Fg%2F11x91lcrh1?hl=en-US&entry=ttu&g_ep=EgoyMDI2MDgxMS4wIKXMDSoASAFQAw%3D%3D";
   const instaUrl = siteData?.aboutInstaUrl || siteData?.contactInfo?.instaUrl || "https://www.instagram.com/yuva_yuvak_mandal/";
   const instaHandle = siteData?.aboutInstaHandle || siteData?.contactInfo?.instaHandle || "@yuva_yuvak_mandal 🚩";
-  const isDefaultMandalName = !siteData?.mandalName || siteData.mandalName.toLowerCase().includes('yuva yuvak mandal');
-  const mandalName = (currentLang !== 'EN' && isDefaultMandalName)
-    ? (t.mandalName || (currentLang === 'GU' ? 'યુવા યુવક મંડળ' : 'युवा युवक मंडल'))
-    : (siteData?.mandalName ? siteData.mandalName.replace('🚩', '').trim() : (t.mandalName || 'YUVA YUVAK MANDAL'));
-  const rawAddress = siteData?.mandalAddress || siteData?.contactInfo?.address || "Ram Nivas Society, Behind Rajeshree Hall, Navsari Bazaar, Sagrampura, Surat, Gujarat - 395002";
-  const isDefaultAddress = !rawAddress || rawAddress.toLowerCase().includes('ram nivas society');
-  const mandalAddress = (currentLang !== 'EN' && isDefaultAddress)
-    ? (currentLang === 'GU' ? 'રામ નિવાસ સોસાયટી, રાજશ્રી હોલ પાછળ, નવસારી બજાર, સંગ્રામપુરા, સુરત, ગુજરાત - 395002' : 'राम निवास सोसायटी, राजश्री हॉल के पीछे, नवसारी बाजार, संग्रामपुरा, सूरत, गुजरात - 395002')
-    : rawAddress;
-  const fullAboutHeader = siteData?.fullAboutHeader || t.fullAboutHeader || "ABOUT YUVA YUVAK MANDAL";
-  const isDefaultFullAbout = !siteData?.fullAboutSubText || siteData.fullAboutSubText.toLowerCase().includes('preserving rich cultural heritage');
-  const fullAboutSubText = (currentLang !== 'EN' && isDefaultFullAbout)
-    ? (t.fullAboutSubText || siteData?.fullAboutSubText || "")
-    : (siteData?.fullAboutSubText !== undefined ? siteData.fullAboutSubText : (t.fullAboutSubText || ""));
+  
+  const mandalName = resolveDynamicContent(siteData?.mandalName, 'mandalName', currentLang, t.mandalName || 'YUVA YUVAK MANDAL');
+  const mandalAddress = resolveDynamicContent(siteData?.mandalAddress || siteData?.contactInfo?.address, 'mandalAddress', currentLang, t.footerAddress || "Ram Nivas Society, Behind Rajeshree Hall, Navsari Bazaar, Sagrampura, Surat, Gujarat - 395002");
+  
+  const fullAboutHeader = resolveDynamicContent(siteData?.fullAboutHeader, 'fullAboutHeader', currentLang, t.fullAboutHeader || "ABOUT YUVA YUVAK MANDAL");
+  const fullAboutSubText = resolveDynamicContent(siteData?.fullAboutSubText, 'fullAboutSubText', currentLang, t.fullAboutSubText);
 
-  const isDefaultCard1 = !siteData?.aboutCard1Desc || siteData.aboutCard1Desc.toLowerCase().includes('founded in 1968');
-  const card1Title = (currentLang === 'GU' && (!siteData?.aboutCard1Title || siteData.aboutCard1Title.toLowerCase().includes('50+ years')))
-    ? '50+ વર્ષનો ભવ્ય વારસો'
-    : (currentLang === 'HI' && (!siteData?.aboutCard1Title || siteData.aboutCard1Title.toLowerCase().includes('50+ years')))
-    ? '50+ वर्ष की गौरवशाली विरासत'
-    : (siteData?.aboutCard1Title || "50+ Years Glorious Legacy");
-  const card1Desc = (currentLang !== 'EN' && isDefaultCard1)
-    ? (currentLang === 'GU' ? 'સગરામપુરા, નવસારી બજાર, સુરતના જુસ્સાદાર યુવાનો દ્વારા 1968માં સ્થપાયેલ, યુવા યુવક મંડળ ગુજરાતના સૌથી પ્રતિષ્ઠિત ગણેશ ઉત્સવ મંડળોમાંનું એક બની ગયું છે.' : '1968 में सग्रामपुरा, नवसारी बाज़ार, सूरत के उत्साही युवाओं द्वारा स्थापित, युवा युवक मंडल गुजरात में सबसे सम्मानित गणेश उत्सव मंडलों में से एक बन गया है।')
-    : (siteData?.aboutCard1Desc || "");
+  const card1Title = resolveDynamicContent(siteData?.aboutCard1Title, 'card1Title', currentLang, t.card1Title || "50+ Years Glorious Legacy");
+  const card1Desc = resolveDynamicContent(siteData?.aboutCard1Desc, 'card1Desc', currentLang, t.card1Desc);
 
-  const isDefaultCard2 = !siteData?.aboutCard2Desc || siteData.aboutCard2Desc.toLowerCase().includes('our mission is to preserve');
-  const card2Title = (currentLang === 'GU' && (!siteData?.aboutCard2Title || siteData.aboutCard2Title.toLowerCase().includes('cultural mission')))
-    ? 'સાંસ્કૃતિક મિશન અને વિઝન'
-    : (currentLang === 'HI' && (!siteData?.aboutCard2Title || siteData.aboutCard2Title.toLowerCase().includes('cultural mission')))
-    ? 'सांस्कृतिक मिशन और विजन'
-    : (siteData?.aboutCard2Title || "Cultural Mission & Vision");
-  const card2Desc = (currentLang !== 'EN' && isDefaultCard2)
-    ? (currentLang === 'GU' ? 'અમારું ધ્યેય સમૃદ્ધ સનાતન પરંપરાઓને જાળવી રાખવાનું, આધ્યાત્મિક સંવાદિતાને પ્રોત્સાહન આપવાનું અને સમુદાય નેતૃત્વ અને દૈવી સેવા દ્વારા યુવાનોને સશક્ત કરવાનું છે.' : 'हमारा मिशन समृद्ध सनातन परंपराओं को संरक्षित करना, आध्यात्मिक सद्भाव को बढ़ावा देना और सामुदायिक नेतृत्व और दिव्य सेवा के माध्यम से युवाओं को सशक्त बनाना है।')
-    : (siteData?.aboutCard2Desc || "");
+  const card2Title = resolveDynamicContent(siteData?.aboutCard2Title, 'card2Title', currentLang, t.card2Title || "Cultural Mission & Vision");
+  const card2Desc = resolveDynamicContent(siteData?.aboutCard2Desc, 'card2Desc', currentLang, t.card2Desc);
 
-  const isDefaultCard3 = !siteData?.aboutCard3Desc || siteData.aboutCard3Desc.toLowerCase().includes('this is more than just a celebration');
-  const card3Title = (currentLang === 'GU' && (!siteData?.aboutCard3Title || siteData.aboutCard3Title.toLowerCase().includes('glorious legacy of togetherness')))
-    ? 'એકતાનો ભવ્ય વારસો'
-    : (currentLang === 'HI' && (!siteData?.aboutCard3Title || siteData.aboutCard3Title.toLowerCase().includes('glorious legacy of togetherness')))
-    ? 'एकजुटता की एक गौरवशाली विरासत'
-    : (siteData?.aboutCard3Title || "A Glorious Legacy of Togetherness");
-  const card3Desc = (currentLang !== 'EN' && isDefaultCard3)
-    ? (currentLang === 'GU' ? 'આ માત્ર એક ઉજવણી કરતાં વધુ છે; તે એકતા, ભક્તિ અને સહિયારી યાદોની પરંપરા છે જે આપણા સમગ્ર સમુદાયને વર્ષ-દર વર્ષે સાથે લાવે છે.' : 'यह महज़ एक उत्सव से कहीं अधिक है; यह एकता, भक्ति और साझा यादों की परंपरा है जो हमारे पूरे समुदाय को साल-दर-साल एक साथ लाती है।')
-    : (siteData?.aboutCard3Desc || "");
+  const card3Title = resolveDynamicContent(siteData?.aboutCard3Title, 'card3Title', currentLang, t.card3Title || "A Glorious Legacy of Togetherness");
+  const card3Desc = resolveDynamicContent(siteData?.aboutCard3Desc, 'card3Desc', currentLang, t.card3Desc);
 
   return (
     <div className="about-page-container mobile-entrance-fade-up" style={{ padding: '40px 20px 40px', maxWidth: '1240px', margin: '0 auto' }}>

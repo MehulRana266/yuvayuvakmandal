@@ -644,7 +644,7 @@ export default function Header({ onGoHome, onNavigate, activeView = 'home' }) {
                 e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 111, 0, 0.45)';
               }}
-              title="Change Language / भाषा बदलें"
+              title={t.changeLanguage || "Change Language / भाषा बदलें"}
             >
               <Globe size={18} color="#FFFFFF" />
               <span>{currentLangObj.name}</span>
@@ -912,7 +912,7 @@ export default function Header({ onGoHome, onNavigate, activeView = 'home' }) {
                 textTransform: 'uppercase'
               }}
             >
-              <Globe size={isPhoneView ? 15 : 12} color="#FFB300" /> Language
+              <Globe size={isPhoneView ? 15 : 12} color="#FFB300" /> {t.languageLabel || 'Language'}
             </div>
 
             <div 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Component, useContext } from 'react';
 import AdminCMSPanel from './AdminCMSPanel';
 import { SiteDataContext, getApiBaseUrl } from '../context/SiteDataContext';
+import { LanguageContext } from '../context/LanguageContext';
 import { ShieldCheck, LogOut, Globe, Lock, AlertTriangle, RefreshCw, Eye, EyeOff } from 'lucide-react';
 
 class AdminErrorBoundary extends Component {
@@ -62,6 +63,7 @@ class AdminErrorBoundary extends Component {
 
 export default function AdminWebsite({ onGoToPublicSite }) {
   const { siteData } = useContext(SiteDataContext);
+  const { t, currentLang } = useContext(LanguageContext);
   const [isAdminUnlocked, setIsAdminUnlocked] = useState(() => {
     try {
       return sessionStorage.getItem('yuva_admin_unlocked') === 'true';
@@ -143,7 +145,7 @@ export default function AdminWebsite({ onGoToPublicSite }) {
             alignItems: 'center',
             gap: '6px'
           }}>
-            <ShieldCheck size={18} /> ADMIN PORTAL
+            <ShieldCheck size={18} /> {t.adminPortalTitle || 'ADMIN PORTAL'}
           </div>
           <div>
             <h2 className="heading-font gold-text" style={{ fontSize: '18px', margin: 0 }}>
@@ -169,7 +171,7 @@ export default function AdminWebsite({ onGoToPublicSite }) {
               gap: '6px'
             }}
           >
-            <Globe size={15} /> 🌐 View Public Website
+            <Globe size={15} /> 🌐 {t.adminViewPublic || 'View Public Website'}
           </button>
 
           {isAdminUnlocked && (
@@ -189,7 +191,7 @@ export default function AdminWebsite({ onGoToPublicSite }) {
                 gap: '6px'
               }}
             >
-              <LogOut size={15} /> Lock / Logout Admin
+              <LogOut size={15} /> {t.adminLogout || 'Lock / Logout Admin'}
             </button>
           )}
         </div>
@@ -220,7 +222,7 @@ export default function AdminWebsite({ onGoToPublicSite }) {
                 <Lock size={30} color="#FFD700" />
               </div>
               <h3 className="heading-font gold-text" style={{ fontSize: '24px', marginBottom: '8px' }}>
-                Admin Portal Login
+                {t.adminLoginTitle || 'Admin Portal Login'}
               </h3>
               <p style={{ color: '#FFECB3', fontSize: '13.5px', marginBottom: '24px' }}>
                 Enter Admin password to edit banner, schedule, gallery & website content live in MongoDB.
@@ -231,20 +233,19 @@ export default function AdminWebsite({ onGoToPublicSite }) {
                   <input 
                     type={showLoginPass ? "text" : "password"}
                     required
-                    placeholder="Enter Admin Password"
+                    placeholder={t.adminPassPlaceholder || "Enter Admin Password"}
                     value={passInput}
                     onChange={(e) => setPassInput(e.target.value)}
                     style={{
                       width: '100%',
                       boxSizing: 'border-box',
                       padding: '14px 44px 14px 16px',
-                      background: 'rgba(0,0,0,0.6)',
+                      background: 'rgba(0,0,0,0.5)',
                       border: '1px solid var(--gold-border)',
-                      borderRadius: '12px',
+                      borderRadius: '10px',
                       color: '#FFF',
                       fontSize: '15px',
-                      outline: 'none',
-                      textAlign: 'center'
+                      outline: 'none'
                     }}
                   />
                   <button
@@ -257,13 +258,10 @@ export default function AdminWebsite({ onGoToPublicSite }) {
                       transform: 'translateY(-50%)',
                       background: 'none',
                       border: 'none',
-                      color: '#FFD700',
+                      color: '#FFB300',
                       cursor: 'pointer',
-                      padding: '4px',
-                      display: 'flex',
-                      alignItems: 'center'
+                      padding: '4px'
                     }}
-                    title={showLoginPass ? "Hide password" : "Show password"}
                   >
                     {showLoginPass ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -275,22 +273,12 @@ export default function AdminWebsite({ onGoToPublicSite }) {
                   </p>
                 )}
 
-                <button
-                  type="submit"
-                  style={{
-                    width: '100%',
-                    background: 'linear-gradient(90deg, #D4AF37, #FFD700, #D4AF37)',
-                    color: '#2B0507',
-                    border: 'none',
-                    padding: '14px',
-                    borderRadius: '12px',
-                    fontSize: '15px',
-                    fontWeight: '800',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 15px rgba(212, 175, 55, 0.4)'
-                  }}
+                <button 
+                  type="submit" 
+                  className="btn-gold" 
+                  style={{ width: '100%', padding: '14px', borderRadius: '10px', fontWeight: 700, fontSize: '16px', cursor: 'pointer' }}
                 >
-                  ⚡ Unlock Admin Portal
+                  {t.adminUnlockBtn || 'Unlock Admin Panel'}
                 </button>
               </form>
             </div>

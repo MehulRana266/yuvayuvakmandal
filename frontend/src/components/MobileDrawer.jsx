@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { LanguageContext } from '../context/LanguageContext';
 import { SiteDataContext } from '../context/SiteDataContext';
 import { X, Calendar, Info, Home, Image, PhoneCall, ShieldCheck } from 'lucide-react';
-import { Translate } from '../utils/useAutoTranslate';
+import { Translate, resolveDynamicContent } from '../utils/useAutoTranslate';
 
 export default function MobileDrawer({ isOpen, onClose, onNavigate, activeView }) {
   const { t, currentLang } = useContext(LanguageContext);
@@ -19,11 +19,8 @@ export default function MobileDrawer({ isOpen, onClose, onNavigate, activeView }
 
   const logoUrl = siteData?.mandalLogoUrl || "/mandal-logo.jpg";
   const currentView = activeView || 'home';
-  const isDefaultMandalName = !siteData?.mandalName || siteData.mandalName.toLowerCase().includes('yuva yuvak mandal');
-  const mandalNameText = (currentLang !== 'EN' && isDefaultMandalName)
-    ? (t.mandalName || (currentLang === 'GU' ? 'યુવા યુવક મંડળ' : 'युवा युवक मंडल'))
-    : (siteData?.mandalName ? siteData.mandalName.replace('🚩', '').trim() : 'Yuva Yuvak Mandal');
-  const mandalLocationText = siteData?.mandalLocation || (currentLang === 'GU' ? 'સુરત, ગુજરાત' : currentLang === 'HI' ? 'सूरत, गुजरात' : 'Surat, Gujarat');
+  const mandalNameText = resolveDynamicContent(siteData?.mandalName, 'mandalName', currentLang, t.mandalName || 'YUVA YUVAK MANDAL');
+  const mandalLocationText = resolveDynamicContent(siteData?.mandalLocation, 'mandalLocation', currentLang, t.footerLocation || 'Surat, Gujarat');
 
   return (
     <div style={{

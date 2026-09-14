@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { MapPin, Navigation, Compass, Instagram } from 'lucide-react';
 import { SiteDataContext } from '../context/SiteDataContext';
 import { LanguageContext } from '../context/LanguageContext';
-import { Translate } from '../utils/useAutoTranslate';
+import { Translate, resolveDynamicContent } from '../utils/useAutoTranslate';
 
 export default function Footer({ onNavigate, onOpenAdmin }) {
   const { currentLang, t } = useContext(LanguageContext);
@@ -12,18 +12,12 @@ export default function Footer({ onNavigate, onOpenAdmin }) {
   const rawPandalAddress = siteData?.footerAddressText 
     || siteData?.contactInfo?.address 
     || "Ram Nivas Society, Behind Rajeshree Hall, Navsari Bazaar, Sagrampura, Surat, Gujarat - 395002";
-  const isDefaultPandalAddress = !rawPandalAddress || rawPandalAddress.toLowerCase().includes('ram nivas society');
-  const pandalAddress = (currentLang !== 'EN' && isDefaultPandalAddress)
-    ? (currentLang === 'GU' ? 'યુવા યુવક મંડળ, રામ નિવાસ સોસાયટી, રાજશ્રી હોલ પાછળ, નવસારી બજાર, સંગ્રામપુરા, સુરત, ગુજરાત - 395002' : 'युवा युवक मंडल, राम निवास सोसायटी, राजश्री हॉल के पीछे, नवसारी बाजार, संग्रामपुरा, सूरत, गुजरात - 395002')
-    : rawPandalAddress;
+  const pandalAddress = resolveDynamicContent(rawPandalAddress, 'pandalAddress', currentLang, t.footerAddress || "Ram Nivas Society, Behind Rajeshree Hall, Navsari Bazaar, Sagrampura, Surat, Gujarat - 395002");
 
   const googleMapsUrl = siteData?.footerGoogleMapsUrl || siteData?.contactInfo?.gmapsUrl || "https://www.google.com/maps/place/21%C2%B011'14.8%22N+72%C2%B049'30.5%22E/@21.1873731,72.8218984,17z/data=!4m4!3m3!8m2!3d21.1874444!4d72.8251389?hl=en-US&entry=ttu&g_ep=EgoyMDI2MDgyMy4wIKXMDSoASAFQAw%3D%3D";
   const instaUrl = siteData?.footerInstaUrl || siteData?.reelsInstaUrl || siteData?.contactInfo?.instaUrl || siteData?.aboutInstaUrl || "https://www.instagram.com/yuva_yuvak_mandal/";
   
-  const isDefaultMandalTitle = !siteData?.footerMandalTitle || siteData.footerMandalTitle.toLowerCase().includes('yuva yuvak mandal');
-  const mandalDisplayName = (currentLang !== 'EN' && isDefaultMandalTitle)
-    ? (currentLang === 'GU' ? 'યુવા યુવક મંડળ' : 'युवा युवक मंडल')
-    : (siteData?.footerMandalTitle ? siteData.footerMandalTitle.replace('🚩', '').trim() : (siteData?.mandalName ? siteData.mandalName.replace('🚩', '').trim() : (t.mandalName || 'YUVA YUVAK MANDAL')));
+  const mandalDisplayName = resolveDynamicContent(siteData?.footerMandalTitle || siteData?.mandalName, 'mandalName', currentLang, t.mandalName || 'YUVA YUVAK MANDAL');
 
   return (
     <footer style={{
@@ -164,8 +158,8 @@ export default function Footer({ onNavigate, onOpenAdmin }) {
         }}
       >
         {(() => {
-          const mandalNamePart = currentLang === 'GU' ? 'યુવા યુવક મંડળ' : currentLang === 'HI' ? 'युवा युवक मंडल' : (siteData?.mandalName ? siteData.mandalName.replace('🚩', '').trim() : 'Yuva Yuvak Mandal');
-          const rightsPart = currentLang === 'GU' ? 'સર્વ હક સુરક્ષિત.' : currentLang === 'HI' ? 'सर्वाधिकार सुरक्षित.' : 'All rights reserved.';
+          const mandalNamePart = resolveDynamicContent(siteData?.footerMandalTitle || siteData?.mandalName, 'mandalName', currentLang, t.mandalName || 'Yuva Yuvak Mandal');
+          const rightsPart = t.footerRights || (currentLang === 'GU' ? 'સર્વ હક સુરક્ષિત.' : currentLang === 'HI' ? 'सर्वाधिकार सुरक्षित.' : 'All rights reserved.');
           const rawRights = siteData?.footerCopyrightText;
           if (rawRights && !rawRights.toLowerCase().includes('all rights reserved') && !rawRights.toLowerCase().includes('yuva yuvak mandal')) {
             return `© ${rawRights}`;

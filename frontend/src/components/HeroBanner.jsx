@@ -713,8 +713,8 @@ export default function HeroBanner({ activeView = 'home' }) {
           onClick={handleToggleSound}
           type="button"
           className="hero-sound-toggle-btn"
-          aria-label={isMuted ? 'Unmute Video' : 'Mute Video'}
-          title={isMuted ? (bannerVideoSound === 'on' ? 'Default Sound ON • Tap to Unmute' : 'Click to Unmute') : 'Click to Mute'}
+          aria-label={isMuted ? (t.soundOff || 'Unmute Video') : (t.soundOn || 'Mute Video')}
+          title={isMuted ? (bannerVideoSound === 'on' ? (t.tapToUnmute || 'Default Sound ON • Tap to Unmute') : (t.soundOff || 'Click to Unmute')) : (t.soundOn || 'Click to Mute')}
           style={{
             position: 'absolute',
             top: isPhoneView ? '16px' : '24px',

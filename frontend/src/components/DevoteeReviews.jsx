@@ -418,7 +418,7 @@ export default function DevoteeReviews() {
                 </div>
                 {ratingError && (
                   <p style={{ color: '#FF5252', fontSize: '12px', margin: '6px 0 0', fontWeight: 600 }}>
-                    {currentLang === 'HI' ? 'स्टार रेटिंग आवश्यक है' : currentLang === 'GU' ? 'સ્ટાર રેટિંગ જરૂરી છે' : 'Star Rating is Required'}
+                    {t.starRatingRequired || 'Star Rating is Required'}
                   </p>
                 )}
               </div>

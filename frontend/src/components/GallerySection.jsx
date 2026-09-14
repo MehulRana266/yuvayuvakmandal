@@ -944,7 +944,7 @@ export default function GallerySection() {
                       gap: '4px',
                       fontSize: '11px'
                     }}>
-                      <Maximize2 size={12} /> {currentLang === 'HI' ? 'देखने के लिए क्लिक करें' : currentLang === 'GU' ? 'જોવા માટે ક્લિક કરો' : 'Click to View'}
+                      <Maximize2 size={12} /> {t.clickToView || (currentLang === 'HI' ? 'देखने के लिए क्लिक करें' : currentLang === 'GU' ? 'જોવા માટે ક્લિક કરો' : 'Click to View')}
                     </div>
                   </div>
                 </div>

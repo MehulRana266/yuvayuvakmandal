@@ -524,8 +524,8 @@ export default function BigScreenVideo() {
                 <button
                   type="button"
                   onClick={toggleSound}
-                  aria-label={isMuted ? "Unmute Sound" : "Mute Sound"}
-                  title={isMuted ? "Unmute Audio" : "Mute Audio"}
+                  aria-label={isMuted ? (t.soundOff || "Unmute Sound") : (t.soundOn || "Mute Sound")}
+                  title={isMuted ? (t.soundOff || "Unmute Audio") : (t.soundOn || "Mute Audio")}
                   className="bigscreen-sound-btn"
                 >
                   {isMuted ? (

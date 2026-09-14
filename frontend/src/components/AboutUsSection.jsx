@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { LanguageContext } from '../context/LanguageContext';
 import { SiteDataContext } from '../context/SiteDataContext';
 import { Heart, Users, Trophy } from 'lucide-react';
-
-import { useAutoTranslate, Translate } from '../utils/useAutoTranslate';
+import { useAutoTranslate, Translate, resolveDynamicContent } from '../utils/useAutoTranslate';
 
 export default function AboutUsSection({ onViewFullAbout }) {
   const { t, currentLang } = useContext(LanguageContext);
@@ -15,11 +14,8 @@ export default function AboutUsSection({ onViewFullAbout }) {
     }
   };
 
-  const displayAboutHeader = siteData?.homeAboutHeader || t.aboutHeader || "ABOUT US";
-  const isDefaultAbout = !siteData?.aboutText || siteData.aboutText.toLowerCase().includes('inspired by the spirit of devotion');
-  const displayAboutText = (currentLang !== 'EN' && isDefaultAbout)
-    ? (t.aboutDesc || siteData?.aboutText || "")
-    : (siteData?.aboutText !== undefined ? siteData.aboutText : (t.aboutDesc || ""));
+  const displayAboutHeader = resolveDynamicContent(siteData?.homeAboutHeader, 'aboutHeader', currentLang, t.aboutHeader || "ABOUT US");
+  const displayAboutText = resolveDynamicContent(siteData?.aboutText, 'aboutDesc', currentLang, t.aboutDesc || "");
 
   return (
     <section id="about" className="about-preview-section" style={{ padding: '38px 20px', maxWidth: '1100px', margin: '0 auto' }}>
