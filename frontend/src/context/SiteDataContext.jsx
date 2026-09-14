@@ -548,7 +548,7 @@ export const resolveMediaUrl = (url) => {
   const uploadMatch = url.match(/\/uploads\/([^\/\?#]+)/);
   if (uploadMatch) {
     const filename = uploadMatch[1];
-    return `/uploads/${filename}`;
+    return `${apiBase}/uploads/${filename}`;
   }
 
   if (url.includes('localhost:') || url.includes('127.0.0.1:')) {

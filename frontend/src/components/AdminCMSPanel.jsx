@@ -1306,6 +1306,52 @@ export default function AdminCMSPanel() {
 
   const [isUploadingMedia, setIsUploadingMedia] = useState(false);
 
+  const compressImageForMobile = (file) => {
+    return new Promise((resolve) => {
+      if (!file.type || !file.type.startsWith('image/') || file.type.includes('gif') || file.type.includes('svg')) {
+        const reader = new FileReader();
+        reader.onload = () => resolve({ fileName: file.name, base64Data: reader.result });
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new window.Image();
+        img.onload = () => {
+          const maxDim = 1920;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const base64Data = canvas.toDataURL('image/jpeg', 0.85);
+          const safeFileName = (file.name || 'photo').replace(/\.[^.]+$/, '') + '.jpg';
+          resolve({ fileName: safeFileName, base64Data });
+        };
+        img.onerror = () => {
+          resolve({ fileName: file.name, base64Data: reader.result });
+        };
+        img.src = e.target.result;
+      };
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(file);
+    });
+  };
+
   const uploadMediaFile = async (fileOrEvent, setUrlState) => {
     let file = fileOrEvent;
     if (fileOrEvent && fileOrEvent.target && fileOrEvent.target.files) {
@@ -1313,34 +1359,67 @@ export default function AdminCMSPanel() {
     }
     if (!file) return;
 
+    // Check size limit for video files
+    if (file.type && file.type.startsWith('video/') && file.size > 28 * 1024 * 1024) {
+      const mbSize = (file.size / (1024 * 1024)).toFixed(1);
+      alert(`⚠️ Video file is too large (${mbSize} MB). Cloud server upload limit is 25 MB. Please select a video under 25 MB or paste a YouTube / online video link.`);
+      return;
+    }
+
     setIsUploadingMedia(true);
-    triggerSuccess('⏳ Uploading video/image file... Please wait!');
+    triggerSuccess('⏳ Preparing & uploading file from phone... Please wait!');
 
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const base64Data = reader.result;
-
-      try {
-        const res = await fetch(`${getApiBaseUrl()}/api/upload`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileName: file.name, fileData: base64Data })
+    try {
+      let processed = null;
+      if (file.type && file.type.startsWith('image/')) {
+        processed = await compressImageForMobile(file);
+      } else {
+        processed = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve({ fileName: file.name, base64Data: reader.result });
+          reader.onerror = () => resolve(null);
+          reader.readAsDataURL(file);
         });
-        if (res.ok) {
-          const json = await res.json();
-          if (json && json.success && json.url) {
-            setUrlState(json.url);
-            triggerSuccess('✅ Video/Image uploaded successfully!');
+      }
+
+      if (!processed || !processed.base64Data) {
+        triggerSuccess('⚠️ Could not read file from device. Please try again.');
+        setIsUploadingMedia(false);
+        return;
+      }
+
+      const res = await fetch(`${getApiBaseUrl()}/api/upload`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: processed.fileName, fileData: processed.base64Data })
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.success && json.url) {
+          setUrlState(json.url);
+          triggerSuccess('✅ Uploaded successfully! Click "Save & Update Live Banner" below to publish.');
+        } else {
+          triggerSuccess(`❌ Upload failed: ${json.message || 'Server error'}`);
+        }
+      } else {
+        let errMessage = 'Server rejected upload';
+        try {
+          const errData = await res.json();
+          errMessage = errData.message || errMessage;
+        } catch(e) {
+          if (res.status === 413) {
+            errMessage = 'File is too large for cloud server (limit ~25MB). Please choose a smaller file.';
           }
         }
-      } catch (err) {
-        console.log('Upload note:', err);
-        triggerSuccess('⚠️ Upload failed. Please try again!');
-      } finally {
-        setIsUploadingMedia(false);
+        triggerSuccess(`❌ ${errMessage}`);
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.log('Upload error:', err);
+      triggerSuccess('⚠️ Upload failed due to network error. Please try again!');
+    } finally {
+      setIsUploadingMedia(false);
+    }
   };
 
   const handleMediaUpload = uploadMediaFile;
@@ -2632,6 +2711,17 @@ export default function AdminCMSPanel() {
                 >
                   📁 Select Photo File From Device
                 </button>
+                {bannerUrl && (
+                  <div style={{ marginTop: '12px', textAlign: 'center', background: 'rgba(0,0,0,0.4)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(212,175,55,0.3)' }}>
+                    <p style={{ color: '#FFD700', fontSize: '11px', margin: '0 0 8px', fontWeight: 600 }}>👁️ Selected Photo Preview:</p>
+                    <img 
+                      src={resolveMediaUrl(bannerUrl)} 
+                      alt="Banner Preview" 
+                      style={{ maxHeight: '160px', maxWidth: '100%', borderRadius: '6px', objectFit: 'contain' }} 
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                  </div>
+                )}
               </div>
             ) : (
               <div style={{ background: 'rgba(255,179,0,0.08)', padding: '16px', borderRadius: '12px', border: '1px dashed #FFB300' }}>
@@ -2660,8 +2750,25 @@ export default function AdminCMSPanel() {
                 >
                   📁 Select Video File From Device
                 </button>
+                {bannerVideoUrl && (
+                  <div style={{ marginTop: '12px', textAlign: 'center', background: 'rgba(0,0,0,0.4)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(212,175,55,0.3)' }}>
+                    <p style={{ color: '#FFD700', fontSize: '11px', margin: '0 0 8px', fontWeight: 600 }}>👁️ Selected Video Preview:</p>
+                    <video 
+                      src={resolveMediaUrl(bannerVideoUrl)} 
+                      controls 
+                      muted 
+                      playsInline
+                      style={{ maxHeight: '160px', maxWidth: '100%', borderRadius: '6px' }} 
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                  </div>
+                )}
               </div>
             )}
+
+            <p style={{ color: '#FFECB3', fontSize: '12px', margin: '12px 0 4px', textAlign: 'center', fontWeight: 600 }}>
+              📌 File upload hone ke baad neeche <span style={{ color: '#FFD700' }}>"Save & Update Live Banner"</span> button par click karein!
+            </p>
 
             <button type="submit" className="btn-gold" style={{ marginTop: '8px', justifyContent: 'center' }}>
               ⚡ Save & Update Live Banner

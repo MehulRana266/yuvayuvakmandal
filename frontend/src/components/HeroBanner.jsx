@@ -658,10 +658,13 @@ export default function HeroBanner({ activeView = 'home' }) {
             <video
               ref={videoRef}
               key={bannerVideo}
+              src={bannerVideo}
               autoPlay
               loop
               muted={isMuted}
+              defaultMuted={true}
               playsInline
+              webkit-playsinline="true"
               preload="auto"
               onTimeUpdate={(e) => {
                 if (e.target.currentTime > 0) {
@@ -677,7 +680,7 @@ export default function HeroBanner({ activeView = 'home' }) {
                 objectFit: 'cover'
               }}
             >
-              <source src={bannerVideo} type="video/mp4" />
+              <source src={bannerVideo} />
             </video>
           )}
         </div>
@@ -685,7 +688,7 @@ export default function HeroBanner({ activeView = 'home' }) {
         <div style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: `url(${bannerBg || '/hero-bg.jpg'})`,
+          backgroundImage: `url("${bannerBg || '/hero-bg.jpg'}")`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           zIndex: 0

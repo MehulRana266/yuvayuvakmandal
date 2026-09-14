@@ -64,11 +64,13 @@ app.post('/api/upload', (req, res) => {
       else if (mime.includes('image/jpeg') || mime.includes('image/jpg')) extension = 'jpg';
       else if (mime.includes('image/png')) extension = 'png';
       else if (mime.includes('image/webp')) extension = 'webp';
-      else if (fileName && fileName.includes('.')) extension = fileName.split('.').pop();
+      else if (mime.includes('image/heic') || mime.includes('image/heif')) extension = 'jpg';
+      else if (fileName && fileName.includes('.')) extension = fileName.split('.').pop().toLowerCase();
     } else {
       buffer = Buffer.from(fileData, 'base64');
-      if (fileName && fileName.includes('.')) extension = fileName.split('.').pop();
+      if (fileName && fileName.includes('.')) extension = fileName.split('.').pop().toLowerCase();
     }
+    extension = extension.replace(/[^a-z0-9]/g, '') || 'jpg';
 
     // Check if an identical file already exists in uploads by comparing extension and file size (Instant!)
     const existingFiles = fs.readdirSync(uploadsDir);
@@ -99,7 +101,8 @@ app.post('/api/upload', (req, res) => {
     }
 
     const publicUrl = `/uploads/${safeName}`;
-    return res.json({ success: true, url: publicUrl });
+    const fullUrl = `${req.protocol}://${req.get('host')}${publicUrl}`;
+    return res.json({ success: true, url: publicUrl, fullUrl, fileName: safeName });
   } catch (err) {
     console.error('File Upload Error:', err);
     return res.status(500).json({ success: false, message: err.message });
