@@ -1,0 +1,813 @@
+:root {
+  --bg-maroon-dark: #2B0507;
+  --bg-maroon-card: #3D0B0D;
+  --bg-maroon-header: #4A0B0E;
+  --gold-primary: #D4AF37;
+  --gold-glow: #FFC107;
+  --gold-border: rgba(212, 175, 55, 0.45);
+  --gold-gradient: linear-gradient(135deg, #FFE082 0%, #D4AF37 50%, #AA7C11 100%);
+  --text-main: #FFFFFF;
+  --text-muted: #E6C687;
+  --font-heading: 'Cinzel', 'Noto Serif Gujarati', 'Noto Sans Devanagari', 'Nirmala UI', 'Shruti', serif;
+  --font-body: 'Poppins', 'Noto Sans Gujarati', 'Noto Sans Devanagari', 'Nirmala UI', 'Shruti', sans-serif;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background-color: var(--bg-maroon-dark);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip !important;
+  scroll-padding-top: 85px;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-maroon-dark);
+  background-image: 
+    radial-gradient(circle at 20% 15%, rgba(124, 9, 2, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 80% 85%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+    linear-gradient(180deg, #2D0407 0%, #190203 100%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: clip !important;
+  position: relative;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  position: relative;
+}
+
+h1, h2, h3, .heading-font {
+  font-family: var(--font-heading);
+}
+
+.gold-text {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   Indic / Regional Scripts Typography Optimization (Gujarati & Hindi)
+   Prevents ligature breakdown, detached matras, and background-clip clipping
+   ========================================================================== */
+
+/* Gujarati Typography */
+html[lang="gu"],
+html[data-lang="GU"],
+[lang="gu"],
+.lang-gu {
+  --font-heading: 'Noto Sans Gujarati', 'Noto Serif Gujarati', 'Nirmala UI', 'Shruti', sans-serif;
+  --font-body: 'Noto Sans Gujarati', 'Nirmala UI', 'Shruti', sans-serif;
+  font-family: 'Noto Sans Gujarati', 'Nirmala UI', 'Shruti', sans-serif !important;
+}
+
+html[lang="gu"] h1,
+html[lang="gu"] h2,
+html[lang="gu"] h3,
+html[lang="gu"] h4,
+html[lang="gu"] h5,
+html[lang="gu"] h6,
+html[lang="gu"] .heading-font {
+  font-family: 'Noto Sans Gujarati', 'Noto Serif Gujarati', 'Nirmala UI', 'Shruti', sans-serif !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  line-height: 1.45 !important;
+}
+
+html[lang="gu"] button,
+html[lang="gu"] input,
+html[lang="gu"] select,
+html[lang="gu"] textarea,
+html[lang="gu"] .btn-gold,
+html[lang="gu"] .btn-outline-gold,
+html[lang="gu"] span,
+html[lang="gu"] p,
+html[lang="gu"] a {
+  font-family: 'Noto Sans Gujarati', 'Nirmala UI', 'Shruti', sans-serif !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+/* Hindi Typography */
+html[lang="hi"],
+html[data-lang="HI"],
+[lang="hi"],
+.lang-hi {
+  --font-heading: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', sans-serif;
+  --font-body: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', sans-serif;
+  font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', sans-serif !important;
+}
+
+html[lang="hi"] h1,
+html[lang="hi"] h2,
+html[lang="hi"] h3,
+html[lang="hi"] h4,
+html[lang="hi"] h5,
+html[lang="hi"] h6,
+html[lang="hi"] .heading-font {
+  font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', sans-serif !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  line-height: 1.45 !important;
+}
+
+html[lang="hi"] button,
+html[lang="hi"] input,
+html[lang="hi"] select,
+html[lang="hi"] textarea,
+html[lang="hi"] .btn-gold,
+html[lang="hi"] .btn-outline-gold,
+html[lang="hi"] span,
+html[lang="hi"] p,
+html[lang="hi"] a {
+  font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', sans-serif !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+
+.maroon-card {
+  background: var(--bg-maroon-card);
+  border: 1px solid var(--gold-border);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.maroon-card:hover {
+  border-color: rgba(255, 193, 7, 0.8);
+  box-shadow: 0 14px 35px rgba(212, 175, 55, 0.3), 0 0 15px rgba(255, 193, 7, 0.15);
+  transform: translateY(-4px);
+}
+
+/* Custom Input and Textarea Hover & Focus */
+.input-gold-hover {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, transform 0.2s ease !important;
+}
+
+.input-gold-hover:hover {
+  border-color: rgba(255, 215, 0, 0.75) !important;
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.25) !important;
+  background: rgba(15, 2, 3, 0.75) !important;
+}
+
+.input-gold-hover:focus {
+  border-color: #FFD700 !important;
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.45) !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+  transform: scale(1.005);
+}
+
+/* Review Card Hover Effects */
+.review-card-hover {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  cursor: pointer;
+}
+
+.review-card-hover:hover {
+  transform: translateY(-3px) scale(1.005) !important;
+  border-color: rgba(255, 215, 0, 0.65) !important;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.25), 0 4px 15px rgba(0, 0, 0, 0.7) !important;
+  background: linear-gradient(135deg, rgba(65, 12, 15, 0.95) 0%, rgba(30, 4, 6, 0.98) 100%) !important;
+}
+
+.review-card-hover .user-avatar {
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.review-card-hover:hover .user-avatar {
+  transform: scale(1.15) rotate(6deg) !important;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6) !important;
+}
+
+/* Interactive Star Rating Button Hover (Smooth, No Layout Shifts) */
+.star-btn-hover {
+  transition: opacity 0.15s ease, filter 0.15s ease !important;
+}
+
+.star-btn-hover:hover {
+  transform: none !important;
+  filter: drop-shadow(0 0 6px #FFD700) !important;
+}
+
+/* Custom Gold Maroon Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(20, 2, 3, 0.6);
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #D4AF37 0%, #8A6D1C 100%);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  transition: background 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FFD700 0%, #D4AF37 100%);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.9);
+}
+
+
+.btn-gold {
+  background: var(--gold-gradient);
+  color: #2D0407;
+  font-weight: 700;
+  border: none;
+  padding: 12px 26px;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.btn-gold:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 25px rgba(255, 193, 7, 0.6);
+}
+
+.btn-outline-gold {
+  background: transparent;
+  color: var(--gold-primary);
+  font-weight: 600;
+  border: 1px solid var(--gold-border);
+  padding: 10px 22px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.btn-outline-gold:hover {
+  border-color: var(--gold-glow);
+  background: rgba(212, 175, 55, 0.15);
+  color: #FFF;
+  transform: translateY(-2px);
+}
+
+/* Admin CMS Navigation Tabs - Consistent size prevents jump/wrap on active switch */
+.admin-tab-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.admin-tab-btn.active {
+  background: var(--gold-gradient);
+  color: #2D0407;
+  font-weight: 700;
+  border: 1px solid #FFD700;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
+}
+
+.admin-tab-btn.inactive {
+  background: rgba(43, 5, 7, 0.7);
+  color: var(--gold-primary);
+  border: 1px solid var(--gold-border);
+}
+
+.admin-tab-btn.inactive:hover {
+  background: rgba(255, 215, 0, 0.12);
+  border-color: #FFD700;
+  color: #FFF;
+}
+
+/* Image Screenshot Exact Styling: Pill Dropdown & 3-Line Menu */
+.lang-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(45, 4, 7, 0.85);
+  border: 1px solid var(--gold-border);
+  border-radius: 30px;
+  padding: 8px 18px;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.lang-pill:hover {
+  border-color: var(--gold-glow);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+}
+
+.menu-box-btn {
+  width: 46px;
+  height: 46px;
+  background: rgba(45, 4, 7, 0.85);
+  border: 1px solid var(--gold-border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-box-btn:hover {
+  border-color: var(--gold-glow);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+  transform: scale(1.05);
+}
+
+.menu-line {
+  width: 20px;
+  height: 2.5px;
+  background-color: var(--gold-primary);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Pulse animation */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+  50% { box-shadow: 0 0 28px rgba(212, 175, 55, 0.7); }
+}
+
+.pulse-gold {
+  animation: pulseGlow 2.5s infinite;
+}
+
+
+/* Party Confetti & Fireworks Animation */
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-30px) rotate(0deg) scale(0.6);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(280px) rotate(360deg) scale(1.2);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(600px) rotate(720deg) scale(0.7);
+    opacity: 0;
+  }
+}
+
+@keyframes festivePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 0 0 50px rgba(255, 179, 0, 0.5);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 50px rgba(255, 215, 0, 1), 0 0 90px rgba(255, 215, 0, 0.9);
+  }
+}
+
+.festive-card-glow {
+  animation: festivePulse 2s infinite ease-in-out;
+}
+
+/* Write Review Left Box Hover Effect (Stable, No Layout Shifts) */
+.write-review-box-hover {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease !important;
+}
+
+.write-review-box-hover:hover {
+  transform: none !important;
+  border-color: #FFD700 !important;
+  box-shadow: 0 16px 40px rgba(255, 215, 0, 0.35), 0 0 20px rgba(255, 193, 7, 0.25) !important;
+  background: linear-gradient(135deg, rgba(75, 14, 17, 0.9) 0%, rgba(45, 5, 8, 0.95) 100%) !important;
+}
+
+/* Subtle & Classy Gold Hover for Review Cards */
+.review-card-hover {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+}
+
+.review-card-hover:hover {
+  border-color: rgba(255, 215, 0, 0.45) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.12) !important;
+  background: rgba(45, 8, 11, 0.6) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Universal Classy Maroon & Gold Cards Hover */
+.maroon-card,
+.gold-box-hover {
+  transition: border-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.maroon-card:hover,
+.gold-box-hover:hover {
+  border-color: var(--gold-border) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 215, 0, 0.15) !important;
+  transform: translateY(-4px);
+}
+
+/* Instagram Button (Static pill, untranslated, completely no animation on hover) */
+.insta-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 48px;
+  width: auto;
+  background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+  border-radius: 24px;
+  text-decoration: none;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 13.5px;
+  box-shadow: 0 4px 18px rgba(253, 29, 29, 0.5);
+  transition: none !important;
+  position: relative;
+  cursor: pointer;
+  padding: 0 20px 0 8px;
+  box-sizing: border-box;
+}
+
+.insta-expand-btn:hover {
+  transform: none !important;
+  box-shadow: 0 4px 18px rgba(253, 29, 29, 0.5) !important;
+}
+
+/* Google Maps Button (Static pill, completely no animation on hover, active, focus, or click) */
+.gmaps-btn,
+.gmaps-btn:hover,
+.gmaps-btn:active,
+.gmaps-btn:focus,
+a.btn-gold.gmaps-btn,
+a.btn-gold.gmaps-btn:hover,
+a.btn-gold.gmaps-btn:active,
+a.btn-gold.gmaps-btn:focus {
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
+  outline: none !important;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35) !important;
+}
+
+/* Instagram Reel Card Responsive Height ONLY (Eliminates dead white gap below "Add a comment..." on mobile/responsive) */
+@media (max-width: 880px) {
+  .insta-reel-card {
+    height: 494px !important;
+  }
+}
+/* Instagram Reel Modal Card (Auto-fits Instagram Embed with 'Add a comment...' snugly fitted, no gap) */
+.insta-modal-card.is-embed-card {
+  width: 450px !important;
+  max-width: 94vw !important;
+  height: var(--modal-embed-height, 745px) !important;
+  max-height: 96vh !important;
+}
+
+@media (max-width: 480px) {
+  .insta-modal-card.is-embed-card {
+    width: min(340px, 92vw) !important;
+    height: var(--modal-embed-height, min(630px, 96vh)) !important;
+  }
+  .insta-modal-nav-prev {
+    left: 6px !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+  .insta-modal-nav-next {
+    right: 6px !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+}
+
+
+.insta-expand-icon-box {
+  width: 32px;
+  height: 32px;
+  background: #FFF;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.insta-expand-text {
+  opacity: 1;
+  white-space: nowrap;
+  margin-left: 10px;
+  font-family: var(--font-body);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+/* Universal Form Inputs & Textareas Overflow Protection (Strict Card Boundaries) */
+.form-input,
+input,
+textarea,
+select {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+}
+
+.form-input {
+  background: #FFFFFF;
+  color: #1A0405;
+  border: 1.5px solid rgba(255, 179, 0, 0.6);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13.5px;
+  font-family: inherit;
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #FFB300;
+  box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.25);
+}
+
+textarea.form-input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-grid-item {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* ==========================================================================
+   Admin Panel Mobile Responsive Strict Containment & Overflow Protection
+   ========================================================================== */
+@media (max-width: 768px) {
+  .admin-cms-wrapper {
+    padding: 10px 8px !important;
+    margin: 8px auto !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .admin-cms-wrapper *,
+  .admin-cms-wrapper *::before,
+  .admin-cms-wrapper *::after {
+    box-sizing: border-box !important;
+  }
+
+  /* All outer cards & inner cards */
+  .admin-card-box,
+  .admin-cms-wrapper .maroon-card,
+  .admin-cms-wrapper [class*="maroon-card"] {
+    padding: 14px 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .admin-card-inner,
+  .admin-cms-wrapper .admin-card-inner {
+    padding: 12px 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Switch all admin form grids to single column on mobile */
+  .admin-form-grid,
+  .admin-cms-wrapper .admin-form-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Every grid item / direct child inside admin form grid */
+  .admin-grid-item,
+  .admin-cms-wrapper .admin-grid-item,
+  .admin-form-grid > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Text-like form controls strictly contained within card boundaries (exclude checkboxes/radios) */
+  .admin-cms-wrapper input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):not([type="range"]),
+  .admin-cms-wrapper select:not(.smart-time-row select),
+  .admin-cms-wrapper textarea,
+  .form-input:not([type="checkbox"]):not([type="radio"]) {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Preserve checkboxes and radios without stretching */
+  .admin-cms-wrapper input[type="checkbox"],
+  .admin-cms-wrapper input[type="radio"] {
+    width: 18px !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    max-width: 18px !important;
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+    box-sizing: content-box !important;
+    accent-color: #FFB300 !important;
+    margin: 0 !important;
+  }
+
+  /* Keep SmartTimeField hour/min/period dropdowns cleanly inline on mobile */
+  .smart-time-row,
+  .admin-cms-wrapper .smart-time-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 4px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .smart-time-row select,
+  .admin-cms-wrapper .smart-time-row select {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 38px !important;
+    flex: 1 !important;
+    padding: 6px 2px !important;
+    font-size: 12px !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* ==========================================================================
+   Donation Official Receipt Print Stylesheet
+   ========================================================================== */
+@media print {
+  @page {
+    size: A5 portrait;
+    margin: 6mm;
+  }
+
+  html, body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    background: #FFFFFF !important;
+    color: #111111 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  div:has(> .donation-receipt-print-area),
+  div:has(> * > .donation-receipt-print-area) {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    position: static !important;
+  }
+
+  .donation-receipt-print-area,
+  .donation-receipt-print-area * {
+    visibility: visible !important;
+  }
+
+  .donation-receipt-print-area {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 580px !important;
+    margin: 0 auto !important;
+    padding: 24px !important;
+    background: #FFFDF6 !important;
+    color: #2B0507 !important;
+    border: 3px double #B8860B !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    z-index: 9999999 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .no-print,
+  button {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+/* ==========================================================================
+   SECTION ENTRANCE ANIMATION (Soft Slide-Up Fade with 1s Delay)
+   Applied across Mobile, Tablet, and Desktop:
+   - Schedule, About Us, Murtikar, Hero and other sections animate after 1s delay.
+   - Comes slightly from below (translateY: 22px) and moves upward while fading in.
+   ========================================================================== */
+
+.mobile-entrance-fade-up,
+.schedule-preview-card.mobile-entrance-fade-up,
+.about-preview-card.mobile-entrance-fade-up,
+.murtikar-royal-card.mobile-entrance-fade-up {
+  opacity: 0 !important;
+  transform: translateY(22px) !important;
+  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1s,
+              transform 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1s !important;
+  will-change: transform, opacity;
+}
+
+.mobile-entrance-fade-up.mobile-in-view,
+.schedule-preview-card.mobile-entrance-fade-up.mobile-in-view,
+.about-preview-card.mobile-entrance-fade-up.mobile-in-view,
+.murtikar-royal-card.mobile-entrance-fade-up.mobile-in-view {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1s,
+              transform 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1s !important;
+}
+
+.mobile-entrance-fade-up.mobile-in-view:hover {
+  transform: translateY(-4px) !important;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+              border-color 0.3s ease,
+              box-shadow 0.3s ease !important;
+}
