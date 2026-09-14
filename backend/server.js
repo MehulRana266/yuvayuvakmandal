@@ -767,13 +767,17 @@ app.get('/api/reviews', async (req, res) => {
 
 app.post('/api/reviews', async (req, res) => {
   try {
-    const { name, rating, comment, location } = req.body;
+    const { name, rating, comment, location, clientDate, createdAt } = req.body;
     if (!name || !comment) {
       return res.status(400).json({ error: 'Name and comment are required' });
     }
 
     const now = new Date();
-    const formattedDateTime = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    // Use clientDate if sent, otherwise calculate accurate Indian Standard Time (IST - Asia/Kolkata)
+    const formattedDateTime = clientDate || (
+      now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' }) + ', ' +
+      now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' })
+    );
 
     const newReviewData = {
       id: Date.now(),
@@ -781,7 +785,8 @@ app.post('/api/reviews', async (req, res) => {
       rating: Number(rating) || 5,
       comment,
       location: location || 'Surat Devotee',
-      date: formattedDateTime
+      date: formattedDateTime,
+      createdAt: createdAt ? new Date(createdAt) : now
     };
 
     const reviews = JSON.parse(fs.readFileSync(reviewsFile, 'utf8'));

@@ -3,6 +3,7 @@ import { Star, MessageSquare, Send, User, MapPin } from 'lucide-react';
 import { LanguageContext } from '../context/LanguageContext';
 import { SiteDataContext, getApiBaseUrl } from '../context/SiteDataContext';
 import { Translate } from '../utils/useAutoTranslate';
+import { formatReviewDate } from '../utils/dateUtils';
 
 export default function DevoteeReviews() {
   const { t, currentLang } = useContext(LanguageContext);
@@ -46,23 +47,57 @@ export default function DevoteeReviews() {
 
   useEffect(() => {
     fetchReviews();
+
+    // 1. Live auto-polling every 4 seconds for real-time sync across devices
+    const pollInterval = setInterval(() => {
+      fetchReviews(true);
+    }, 4000);
+
+    // 2. BroadcastChannel for 0ms instant sync across browser tabs
+    let channel;
+    try {
+      if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+        channel = new BroadcastChannel('ganpati_reviews_sync');
+        channel.onmessage = () => {
+          fetchReviews(true);
+        };
+      }
+    } catch (e) {}
+
+    // 3. Tab visibility, window focus, and custom event listeners
+    const handleSync = () => fetchReviews(true);
+    window.addEventListener('focus', handleSync);
+    document.addEventListener('visibilitychange', handleSync);
+    window.addEventListener('new_review_added', handleSync);
+
+    return () => {
+      clearInterval(pollInterval);
+      if (channel) channel.close();
+      window.removeEventListener('focus', handleSync);
+      document.removeEventListener('visibilitychange', handleSync);
+      window.removeEventListener('new_review_added', handleSync);
+    };
   }, []);
 
-  const fetchReviews = async () => {
+  const fetchReviews = async (silent = false) => {
     try {
       const res = await fetch(`${getApiBaseUrl()}/api/reviews?_t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         setReviews(Array.isArray(data) ? data : []);
-      } else {
+      } else if (!silent) {
         setReviews([]);
         setIsReady(true);
       }
     } catch (e) {
-      setReviews([]);
-      setIsReady(true);
+      if (!silent) {
+        setReviews([]);
+        setIsReady(true);
+      }
     } finally {
-      setHasFetched(true);
+      if (!silent) {
+        setHasFetched(true);
+      }
     }
   };
 
@@ -100,7 +135,18 @@ export default function DevoteeReviews() {
 
     setLoading(true);
 
-    const newRev = { name, rating, comment, location: location || 'Surat Devotee' };
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' }) + ', ' +
+      now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' });
+
+    const newRev = {
+      name,
+      rating,
+      comment,
+      location: location || 'Surat Devotee',
+      clientDate: formattedDate,
+      createdAt: now.toISOString()
+    };
 
     try {
       const res = await fetch(`${getApiBaseUrl()}/api/reviews`, {
@@ -127,15 +173,14 @@ export default function DevoteeReviews() {
         } catch (e) {}
       }
     } catch (err) {
-      const now = new Date();
-      const formattedDate = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
       const localRev = {
         id: Date.now(),
         name,
         rating,
         comment,
         location: location || 'Surat Devotee',
-        date: formattedDate
+        date: formattedDate,
+        createdAt: now.toISOString()
       };
       setReviews(prev => [...prev, localRev]);
       setName('');
@@ -308,7 +353,7 @@ export default function DevoteeReviews() {
                           {item.name}
                         </h4>
                         <span style={{ fontSize: '11px', color: '#AAA', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <MapPin size={10} color="#FFB300" /> {item.location || 'Surat Devotee'} • {item.date || 'Recent'}
+                          <MapPin size={10} color="#FFB300" /> {item.location || 'Surat Devotee'} • {formatReviewDate(item, currentLang)}
                         </span>
                       </div>
                     </div>

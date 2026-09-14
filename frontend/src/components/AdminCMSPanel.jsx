@@ -38,6 +38,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import html2canvas from 'html2canvas';
+import { formatReviewDate } from '../utils/dateUtils';
 import { jsPDF } from 'jspdf';
 
 const ALL_IMAGE_TYPES = 'image/*,.tif,.jfif,.pjp,.apng,.xbm,.jxl,.jpe,.jpeg,.heif,.ico,.tiff,.webp,.svgz,.jpg,.heic,.gif,.svg,.png,.bmp';
@@ -313,7 +314,7 @@ function AdminReviewsManager() {
                   <p style={{ color: '#FFECB3', fontSize: '13px', margin: '0 0 4px', fontStyle: 'italic' }}>
                     "{r.comment}"
                   </p>
-                  <span style={{ color: '#AAA', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}>📍 {r.location} • 🕒 {r.date}</span>
+                  <span style={{ color: '#AAA', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}>📍 {r.location} • 🕒 {formatReviewDate(r)}</span>
                 </div>
                 <button 
                   type="button"
