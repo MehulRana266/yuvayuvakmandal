@@ -59,9 +59,13 @@ app.get('/uploads/:filename', async (req, res, next) => {
       const doc = await Media.findOne({ filename });
       if (doc && doc.data) {
         const filePath = path.join(uploadsDir, filename);
-        try { fs.writeFileSync(filePath, doc.data); } catch (e) {}
-        res.setHeader('Content-Type', doc.contentType || 'image/jpeg');
-        return res.send(doc.data);
+        try {
+          fs.writeFileSync(filePath, doc.data);
+          return res.sendFile(filePath);
+        } catch (fileErr) {
+          res.setHeader('Content-Type', doc.contentType || 'image/jpeg');
+          return res.send(doc.data);
+        }
       }
     }
   } catch (err) {
@@ -137,11 +141,15 @@ app.post('/api/upload', (req, res) => {
         else if (extension === 'gif') mimeType = 'image/gif';
         else if (extension === 'mp4') mimeType = 'video/mp4';
         else if (extension === 'webm') mimeType = 'video/webm';
-        Media.findOneAndUpdate(
-          { filename: safeName },
-          { filename: safeName, data: buffer, contentType: mimeType },
-          { upsert: true }
-        ).catch(mErr => console.warn('MongoDB Atlas media save warning:', mErr.message));
+        if (buffer.length <= 15 * 1024 * 1024) {
+          Media.findOneAndUpdate(
+            { filename: safeName },
+            { filename: safeName, data: buffer, contentType: mimeType },
+            { upsert: true }
+          ).catch(mErr => console.warn('MongoDB Atlas media save warning:', mErr.message));
+        } else {
+          console.warn(`Media file ${safeName} (${(buffer.length / 1024 / 1024).toFixed(1)}MB) exceeds 15MB limit, saved on disk only.`);
+        }
       } catch (mErr) {
         console.warn('MongoDB Atlas media backup error:', mErr.message);
       }
@@ -478,6 +486,10 @@ async function translateText(text, targetLang) {
   // Don't translate if already in target language script
   if (targetLang === 'hi' && /[\u0900-\u097F]/.test(trimmed)) return text;
   if (targetLang === 'gu' && /[\u0A80-\u0AFF]/.test(trimmed)) return text;
+
+  // Check custom glossary first
+  const custom = getCustomTranslation(trimmed, targetLang);
+  if (custom) return custom;
 
   const cacheKey = `${targetLang.toLowerCase()}:${trimmed}`;
   if (translationCache.has(cacheKey)) return translationCache.get(cacheKey);

@@ -8,7 +8,6 @@ export default function ScheduleSection({ onBackToHome }) {
   const { t, currentLang } = useContext(LanguageContext);
   const { siteData } = useContext(SiteDataContext);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedDay, setSelectedDay] = useState('All');
 
   const displayScheduleHeader = siteData?.fullScheduleHeader || t.fullScheduleHeader || "DIVINE AARTI & UTSAV SCHEDULE";
   const displayScheduleSubText = siteData?.fullScheduleSubText !== undefined ? siteData.fullScheduleSubText : (t.fullScheduleSubText || "");
@@ -41,25 +40,34 @@ export default function ScheduleSection({ onBackToHome }) {
   };
 
   const formatTranslatedDayBadge = (dayStr, timelineInfo) => {
-    const raw = formatDayBadgeLabel(dayStr, timelineInfo);
-    if (!raw) return currentLang === 'HI' ? 'प्रतिदिन' : currentLang === 'GU' ? 'દરરોજ' : 'Daily';
-    const lower = String(raw).toLowerCase();
-    if (lower === 'daily') {
+    if (!dayStr) return currentLang === 'HI' ? 'प्रतिदिन' : currentLang === 'GU' ? 'દરરોજ' : 'Daily';
+    const tag = String(dayStr).trim();
+    const lower = tag.toLowerCase();
+
+    if (lower.includes('daily')) {
       return currentLang === 'HI' ? 'प्रतिदिन' : currentLang === 'GU' ? 'દરરોજ' : 'Daily';
     }
     if (lower.includes('aagman')) {
+      const date = timelineInfo?.aagmanDateFormatted;
+      if (date) {
+        return currentLang === 'HI' ? `आगमन (${date.slice(0, 5)})` : currentLang === 'GU' ? `આગમન (${date.slice(0, 5)})` : `Aagman (${date.slice(0, 5)})`;
+      }
       return currentLang === 'HI' ? 'आगमन दिवस' : currentLang === 'GU' ? 'આગમન દિવસ' : 'Aagman Day';
     }
     if (lower.includes('visarjan')) {
+      const date = timelineInfo?.visarjanDateFormatted;
+      if (date) {
+        return currentLang === 'HI' ? `विसर्जन (${date.slice(0, 5)})` : currentLang === 'GU' ? `વિસર્જન (${date.slice(0, 5)})` : `Visarjan (${date.slice(0, 5)})`;
+      }
       return currentLang === 'HI' ? 'विसर्जन दिवस' : currentLang === 'GU' ? 'વિસર્જન દિવસ' : 'Visarjan Day';
     }
     if (currentLang === 'HI') {
-      return raw.replace(/Day (\d+)/i, 'दिन $1').replace(/Day/i, 'दिन');
+      return tag.replace(/Day (\d+)/i, 'दिन $1').replace(/Day/i, 'दिन');
     }
     if (currentLang === 'GU') {
-      return raw.replace(/Day (\d+)/i, 'દિવસ $1').replace(/Day/i, 'દિવસ');
+      return tag.replace(/Day (\d+)/i, 'દિવસ $1').replace(/Day/i, 'દિવસ');
     }
-    return raw;
+    return tag;
   };
 
   const getEventTitle = (item) => item?.title || '';
@@ -143,6 +151,12 @@ export default function ScheduleSection({ onBackToHome }) {
             white-space: nowrap !important;
             flex-shrink: 0 !important;
             letter-spacing: -0.2px !important;
+          }
+          @media (max-width: 360px) {
+            .schedule-card-top-badges {
+              flex-wrap: wrap !important;
+              gap: 5px !important;
+            }
           }
           .schedule-card-title {
             font-size: clamp(13px, 3.4vw, 16px) !important;

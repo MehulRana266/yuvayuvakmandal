@@ -19,8 +19,13 @@ export const calculateFullFestivalTimeline = (siteData = {}) => {
   let startD = new Date(startStr);
   if (isNaN(startD.getTime())) startD = new Date('2026-09-14');
 
-  let visarjanD = new Date(startD);
-  visarjanD.setDate(startD.getDate() + 10);
+  let visarjanD = siteData?.visarjanDate ? new Date(siteData.visarjanDate) : new Date(startD);
+  if (isNaN(visarjanD.getTime())) {
+    visarjanD = new Date(startD);
+    visarjanD.setDate(startD.getDate() + 10);
+  } else if (!siteData?.visarjanDate) {
+    visarjanD.setDate(startD.getDate() + 10);
+  }
 
   const timeline = [];
   const aagmanFormatted = formatD(aagmanD);
@@ -584,9 +589,16 @@ export const SiteDataProvider = ({ children }) => {
   const syncChannelRef = React.useRef(null);
   const hasInitialServerSyncRef = React.useRef(false);
   const isExplicitUserEditRef = React.useRef(false);
+  const lastLocalEditTimeRef = React.useRef(0);
 
   // Function to pull latest data from backend (Single Source of Truth)
   const fetchLatestData = async () => {
+    // CRITICAL: If the user made a local edit within the last 4 seconds,
+    // do not let background polling overwrite local uncommitted or translating state!
+    if (Date.now() - lastLocalEditTimeRef.current < 4000) {
+      return;
+    }
+
     try {
       const apiBase = getApiBaseUrl();
       const timestamp = Date.now();
@@ -610,6 +622,11 @@ export const SiteDataProvider = ({ children }) => {
       if (siteDataRes && typeof siteDataRes === 'object' && !siteDataRes.error) {
         hasInitialServerSyncRef.current = true;
         setSiteData(prev => {
+          // Double-check race condition inside reducer
+          if (Date.now() - lastLocalEditTimeRef.current < 4000) {
+            return prev;
+          }
+
           const freshData = {
             ...defaultSiteData,
             ...siteDataRes
@@ -715,39 +732,26 @@ export const SiteDataProvider = ({ children }) => {
             translations: data.siteData.translations
           }));
         }
+        // Broadcast to other tabs ONLY after server has successfully committed the data!
+        if (syncChannelRef.current) {
+          try {
+            syncChannelRef.current.postMessage('REFETCH');
+          } catch (e) {}
+        }
       })
       .catch(err => console.log('Error saving to backend:', err));
-
-    if (syncChannelRef.current) {
-      try {
-        syncChannelRef.current.postMessage('REFETCH');
-      } catch (e) {}
-    }
   }, [siteData]);
 
-  // Guaranteed instantaneous push to server for user edits (prevents background polling race condition)
+  // Guaranteed instantaneous local state update + persistent backend push
   const saveStateAndSync = (updater) => {
     isIncomingFromServerRef.current = false;
     isExplicitUserEditRef.current = true;
+    lastLocalEditTimeRef.current = Date.now();
     setSiteData(prev => {
       const next = typeof updater === 'function' ? updater(prev) : { ...prev, ...updater };
       try {
         localStorage.setItem('yuva_site_data', JSON.stringify(next));
       } catch (e) {}
-
-      const apiBase = getApiBaseUrl();
-      fetch(`${apiBase}/api/site-data`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(next)
-      }).catch(err => console.log('Direct save error:', err));
-
-      if (syncChannelRef.current) {
-        try {
-          syncChannelRef.current.postMessage('REFETCH');
-        } catch (e) {}
-      }
-
       return next;
     });
   };
@@ -1005,6 +1009,10 @@ export const SiteDataProvider = ({ children }) => {
     }));
   };
 
+  const updateVisarjanDate = (dateStr) => {
+    saveStateAndSync(prev => ({ ...prev, visarjanDate: dateStr }));
+  };
+
   const addVolunteer = (volunteer) => {
     const newItem = {
       id: Date.now(),
@@ -1016,21 +1024,21 @@ export const SiteDataProvider = ({ children }) => {
       canEditBanner: Boolean(volunteer.canEditBanner),
       date: new Date().toLocaleDateString('en-GB')
     };
-    setSiteData(prev => ({ ...prev, volunteers: [newItem, ...(prev.volunteers || [])] }));
+    saveStateAndSync(prev => ({ ...prev, volunteers: [newItem, ...(prev.volunteers || [])] }));
   };
 
   const deleteVolunteer = (id) => {
-    setSiteData(prev => ({
+    saveStateAndSync(prev => ({
       ...prev,
-      volunteers: (prev.volunteers || []).filter(v => v.id !== id && v._id !== id)
+      volunteers: (prev.volunteers || []).filter(v => String(v.id) !== String(id) && String(v._id) !== String(id))
     }));
   };
 
   const toggleVolunteerPermission = (id, permissionKey) => {
-    setSiteData(prev => ({
+    saveStateAndSync(prev => ({
       ...prev,
       volunteers: (prev.volunteers || []).map(v => {
-        if (v.id === id || v._id === id) {
+        if (String(v.id) === String(id) || String(v._id) === String(id)) {
           if (permissionKey) {
             return { ...v, [permissionKey]: !v[permissionKey] };
           }
@@ -1067,7 +1075,7 @@ export const SiteDataProvider = ({ children }) => {
   };
 
   const deleteInquiry = (id) => {
-    setSiteData(prev => ({ ...prev, inquiries: (prev.inquiries || []).filter(i => i.id !== id && i._id !== id) }));
+    setSiteData(prev => ({ ...prev, inquiries: (prev.inquiries || []).filter(i => String(i.id) !== String(id) && String(i._id) !== String(id)) }));
 
     const apiBase = getApiBaseUrl();
     fetch(`${apiBase}/api/inquiries/${id}`, {
@@ -1081,11 +1089,11 @@ export const SiteDataProvider = ({ children }) => {
       date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }), 
       ...donation 
     };
-    setSiteData(prev => ({ ...prev, donations: [newItem, ...(prev.donations || [])] }));
+    saveStateAndSync(prev => ({ ...prev, donations: [newItem, ...(prev.donations || [])] }));
   };
 
   const deleteDonation = (id) => {
-    setSiteData(prev => ({ ...prev, donations: (prev.donations || []).filter(d => d.id !== id && d._id !== id) }));
+    saveStateAndSync(prev => ({ ...prev, donations: (prev.donations || []).filter(d => String(d.id) !== String(id) && String(d._id) !== String(id)) }));
   };
 
   const changeAdminPassword = async (currentPassword, newPassword) => {
@@ -1098,7 +1106,7 @@ export const SiteDataProvider = ({ children }) => {
       });
       const data = await res.json();
       if (data && data.success) {
-        setSiteData(prev => ({ ...prev, adminPassword: newPassword }));
+        saveStateAndSync(prev => ({ ...prev, adminPassword: newPassword }));
         return { success: true, message: data.message };
       }
       return { success: false, message: data.message || 'Failed to update password' };
@@ -1109,16 +1117,14 @@ export const SiteDataProvider = ({ children }) => {
 
   const updateSiteData = (partialObj) => {
     if (!partialObj || typeof partialObj !== 'object') return;
-    isIncomingFromServerRef.current = false;
-    isExplicitUserEditRef.current = true;
-    setSiteData(prev => ({
+    saveStateAndSync(prev => ({
       ...prev,
       ...partialObj
     }));
   };
 
   const resetToDefaults = () => {
-    setSiteData(defaultSiteData);
+    saveStateAndSync(() => defaultSiteData);
     try { localStorage.removeItem('yuva_site_data'); } catch(e){}
   };
 
@@ -1137,6 +1143,7 @@ export const SiteDataProvider = ({ children }) => {
       updateContactInfo,
       updateAagmanDate,
       updateFestivalStartDate,
+      updateVisarjanDate,
       addEvent,
       deleteEvent,
       addScheduleEvent,

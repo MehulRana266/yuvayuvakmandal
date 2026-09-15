@@ -137,6 +137,14 @@ function AdminReviewsManager() {
           if (review.id && (r.id === review.id || String(r.id) === String(review.id))) return false;
           return true;
         }));
+        try {
+          if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+            const channel = new BroadcastChannel('ganpati_reviews_sync');
+            channel.postMessage('DELETE_REVIEW');
+            channel.close();
+          }
+          window.dispatchEvent(new CustomEvent('new_review_added'));
+        } catch (e) {}
       })
       .catch(err => {
         console.error('Delete review error:', err);
@@ -1450,28 +1458,6 @@ export default function AdminCMSPanel() {
       taglineLinesArray
     );
 
-    // Direct immediate save to backend API
-    try {
-      fetch(`${getApiBaseUrl()}/api/site-data`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...siteData,
-          heroHeading: combinedHeading,
-          heroHeadingLines: linesArray,
-          heroHeadingHighlightLine: headingHighlightLine,
-          targetDateStr: targetDateTime,
-          heroTagline: combinedTagline,
-          heroTaglineLines: taglineLinesArray,
-          bannerImageUrl: bannerUrl,
-          bannerMediaType,
-          bannerVideoUrl,
-          bannerTextAlignment,
-          bannerVideoSound
-        })
-      }).catch(err => console.warn('Direct banner save failed:', err));
-    } catch(err) {}
-
     triggerSuccess(`⚡ Live Updated: Hero 5-Line Title, 2-Line Tagline & Banner Settings Synced!`);
   };
 
@@ -1528,7 +1514,7 @@ export default function AdminCMSPanel() {
   const handleDeleteBigScreenVideo = (id) => {
     if (deleteBigScreenVideo) {
       deleteBigScreenVideo(id);
-      if (editingBsVideoId === id) {
+      if (String(editingBsVideoId) === String(id)) {
         setEditingBsVideoId(null);
         setBsVideoTitle('');
         setBsVideoUrl('');

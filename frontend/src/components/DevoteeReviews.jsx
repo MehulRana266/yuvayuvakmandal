@@ -84,7 +84,10 @@ export default function DevoteeReviews() {
       const res = await fetch(`${getApiBaseUrl()}/api/reviews?_t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        setReviews(Array.isArray(data) ? data : []);
+        setReviews(prev => {
+          if (JSON.stringify(prev) === JSON.stringify(data)) return prev;
+          return Array.isArray(data) ? data : [];
+        });
       } else if (!silent) {
         setReviews([]);
         setIsReady(true);
