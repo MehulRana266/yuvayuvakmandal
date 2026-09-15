@@ -1398,7 +1398,7 @@ export default function AdminCMSPanel() {
         const json = await res.json();
         if (json && json.success && json.url) {
           setUrlState(json.url);
-          triggerSuccess('✅ Uploaded successfully! Click "Save & Update Live Banner" below to publish.');
+          triggerSuccess('✅ File uploaded successfully! Click "+ Upload to Gallery" or Save below to publish.');
         } else {
           triggerSuccess(`❌ Upload failed: ${json.message || 'Server error'}`);
         }
@@ -1449,6 +1449,29 @@ export default function AdminCMSPanel() {
       headingHighlightLine,
       taglineLinesArray
     );
+
+    // Direct immediate save to backend API
+    try {
+      fetch(`${getApiBaseUrl()}/api/site-data`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...siteData,
+          heroHeading: combinedHeading,
+          heroHeadingLines: linesArray,
+          heroHeadingHighlightLine: headingHighlightLine,
+          targetDateStr: targetDateTime,
+          heroTagline: combinedTagline,
+          heroTaglineLines: taglineLinesArray,
+          bannerImageUrl: bannerUrl,
+          bannerMediaType,
+          bannerVideoUrl,
+          bannerTextAlignment,
+          bannerVideoSound
+        })
+      }).catch(err => console.warn('Direct banner save failed:', err));
+    } catch(err) {}
+
     triggerSuccess(`⚡ Live Updated: Hero 5-Line Title, 2-Line Tagline & Banner Settings Synced!`);
   };
 
@@ -2715,11 +2738,24 @@ export default function AdminCMSPanel() {
                   <div style={{ marginTop: '12px', textAlign: 'center', background: 'rgba(0,0,0,0.4)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(212,175,55,0.3)' }}>
                     <p style={{ color: '#FFD700', fontSize: '11px', margin: '0 0 8px', fontWeight: 600 }}>👁️ Selected Photo Preview:</p>
                     <img 
+                      id="bannerImgPreviewEl"
                       src={resolveMediaUrl(bannerUrl)} 
                       alt="Banner Preview" 
                       style={{ maxHeight: '160px', maxWidth: '100%', borderRadius: '6px', objectFit: 'contain' }} 
-                      onError={(e) => { e.target.style.display = 'none'; }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        const errEl = document.getElementById('bannerImgErrNotice');
+                        if (errEl) errEl.style.display = 'block';
+                      }}
+                      onLoad={(e) => {
+                        e.target.style.display = 'inline-block';
+                        const errEl = document.getElementById('bannerImgErrNotice');
+                        if (errEl) errEl.style.display = 'none';
+                      }}
                     />
+                    <div id="bannerImgErrNotice" style={{ display: 'none', color: '#FFA000', fontSize: '12px', padding: '8px', background: 'rgba(255, 160, 0, 0.1)', borderRadius: '6px' }}>
+                      ⚠️ Photo load nahi hui (Purana link ya missing file). Kripya upar "Select Photo File From Device" se naya photo chunein.
+                    </div>
                   </div>
                 )}
               </div>
@@ -2759,8 +2795,20 @@ export default function AdminCMSPanel() {
                       muted 
                       playsInline
                       style={{ maxHeight: '160px', maxWidth: '100%', borderRadius: '6px' }} 
-                      onError={(e) => { e.target.style.display = 'none'; }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        const errEl = document.getElementById('bannerVidErrNotice');
+                        if (errEl) errEl.style.display = 'block';
+                      }}
+                      onLoadedData={(e) => {
+                        e.target.style.display = 'inline-block';
+                        const errEl = document.getElementById('bannerVidErrNotice');
+                        if (errEl) errEl.style.display = 'none';
+                      }}
                     />
+                    <div id="bannerVidErrNotice" style={{ display: 'none', color: '#FFA000', fontSize: '12px', padding: '8px', background: 'rgba(255, 160, 0, 0.1)', borderRadius: '6px' }}>
+                      ⚠️ Video load nahi hui (Purana link ya missing file). Kripya upar "Select Video File From Device" se naya video chunein ya valid link dalein.
+                    </div>
                   </div>
                 )}
               </div>
@@ -3278,10 +3326,10 @@ export default function AdminCMSPanel() {
                             <div style={{ position: 'relative', width: '100%', height: '135px', background: '#000', overflow: 'hidden' }}>
                               {item.type === 'Photo' ? (
                                 <img 
-                                  src={item.url} 
+                                  src={resolveMediaUrl(item.url)} 
                                   alt={item.title} 
                                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                                  onError={(e) => { e.target.src = '/bappa-banner.jpg'; }}
+                                  onError={(e) => { e.target.onerror = null; e.target.src = '/bappa-banner.jpg'; }}
                                 />
                               ) : (
                                 ytThumb ? (
@@ -3292,7 +3340,7 @@ export default function AdminCMSPanel() {
                                   />
                                 ) : (
                                   <video 
-                                    src={item.url} 
+                                    src={resolveMediaUrl(item.url)} 
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                                     muted 
                                     preload="metadata"
@@ -3340,7 +3388,7 @@ export default function AdminCMSPanel() {
                                 type="button"
                                 onClick={() => {
                                   if (window.confirm(`Delete "${item.title || 'Media'}" (${item.type}) from year ${item.year}?`)) {
-                                    deleteGalleryItem(item.id);
+                                    deleteGalleryItem(item.id || item._id);
                                   }
                                 }}
                                 style={{

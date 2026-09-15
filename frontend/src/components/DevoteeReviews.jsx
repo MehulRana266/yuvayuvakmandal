@@ -332,11 +332,17 @@ export default function DevoteeReviews() {
                   borderRadius: '16px',
                   padding: '18px 20px'
                 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
                       <div className="user-avatar" style={{
-                        width: '32px',
-                        height: '32px',
+                        width: '34px',
+                        height: '34px',
+                        minWidth: '34px',
+                        minHeight: '34px',
+                        maxWidth: '34px',
+                        maxHeight: '34px',
+                        flexShrink: 0,
+                        aspectRatio: '1 / 1',
                         borderRadius: '50%',
                         background: 'linear-gradient(135deg, #FFB300, #D4AF37)',
                         display: 'flex',
@@ -344,27 +350,34 @@ export default function DevoteeReviews() {
                         justifyContent: 'center',
                         color: '#2B0507',
                         fontWeight: 700,
-                        fontSize: '13px'
+                        fontSize: '13px',
+                        overflow: 'hidden'
                       }}>
-                        <User size={16} color="#2B0507" />
+                        <User size={18} color="#2B0507" style={{ flexShrink: 0 }} />
                       </div>
-                      <div>
-                        <h4 style={{ color: '#FFF', fontSize: '15px', margin: 0, fontWeight: 700 }}>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <h4 style={{ color: '#FFF', fontSize: '14.5px', margin: '0 0 2px', fontWeight: 700, lineHeight: 1.2, wordBreak: 'break-word' }}>
                           {item.name}
                         </h4>
-                        <span style={{ fontSize: '11px', color: '#AAA', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <MapPin size={10} color="#FFB300" /> {item.location || 'Surat Devotee'} • {formatReviewDate(item, currentLang)}
-                        </span>
+                        <div style={{ fontSize: '11px', color: '#AAA', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', lineHeight: 1.3 }}>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#FFD700', fontWeight: 600 }}>
+                            <MapPin size={11} color="#FFB300" style={{ flexShrink: 0 }} />
+                            <span>{item.location || 'Surat Devotee'}</span>
+                          </span>
+                          <span style={{ color: '#777' }}>•</span>
+                          <span>{formatReviewDate(item, currentLang)}</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '2px' }}>
+                    <div style={{ display: 'flex', gap: '2px', flexShrink: 0, marginTop: '2px' }}>
                       {[1, 2, 3, 4, 5].map((s) => (
                         <Star 
                           key={s} 
                           size={14} 
                           fill={s <= item.rating ? '#FFD700' : 'transparent'} 
                           color={s <= item.rating ? '#FFD700' : '#444'} 
+                          style={{ flexShrink: 0 }}
                         />
                       ))}
                     </div>

@@ -688,7 +688,7 @@ export default function HeroBanner({ activeView = 'home' }) {
         <div style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: `url("${bannerBg || '/hero-bg.jpg'}")`,
+          backgroundImage: bannerBg ? `url("${bannerBg}"), url("/hero-bg.jpg")` : 'url("/hero-bg.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           zIndex: 0

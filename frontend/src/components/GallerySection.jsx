@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LanguageContext } from '../context/LanguageContext';
-import { SiteDataContext } from '../context/SiteDataContext';
+import { SiteDataContext, resolveMediaUrl } from '../context/SiteDataContext';
 import { Image, Video, Folder, Sparkles, X, Play, Maximize2, ArrowLeft } from 'lucide-react';
 
 function getYouTubeEmbedUrl(url) {
@@ -641,14 +641,18 @@ export default function GallerySection() {
                       />
                     ) : stats.coverUrl.match(/\.(mp4|webm|ogg)$/i) || stats.coverUrl.startsWith('data:video') ? (
                       <video 
-                        src={stats.coverUrl} 
+                        src={resolveMediaUrl(stats.coverUrl)} 
                         style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} 
                       />
                     ) : (
                       <img 
-                        src={stats.coverUrl} 
+                        src={resolveMediaUrl(stats.coverUrl)} 
                         alt={`Folder ${yearStr}`} 
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/bappa-banner.jpg';
+                        }}
                       />
                     )
                   ) : (
@@ -885,7 +889,7 @@ export default function GallerySection() {
                     ) : item.type === 'Video' ? (
                       <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                         <video
-                          src={item.url}
+                          src={resolveMediaUrl(item.url)}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                         <div style={{
@@ -911,9 +915,13 @@ export default function GallerySection() {
                       </div>
                     ) : (
                       <img
-                        src={item.url}
+                        src={resolveMediaUrl(item.url)}
                         alt={getDisplayTitle(item)}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/bappa-banner.jpg';
+                        }}
                       />
                     )}
                     <span style={{
@@ -1019,7 +1027,7 @@ export default function GallerySection() {
                   />
                 ) : (
                   <video
-                    src={selectedMedia.url}
+                    src={resolveMediaUrl(selectedMedia.url)}
                     controls
                     autoPlay
                     className="gallery-lightbox-video"
@@ -1034,7 +1042,7 @@ export default function GallerySection() {
                   />
                 ) : (
                   <img
-                    src={selectedMedia.url}
+                    src={resolveMediaUrl(selectedMedia.url)}
                     alt={getDisplayTitle(selectedMedia)}
                     className="gallery-lightbox-img"
                     onError={(e) => {

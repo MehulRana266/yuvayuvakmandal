@@ -528,11 +528,17 @@ export const getApiBaseUrl = () => {
   if (import.meta.env.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '');
   }
-  // 2. Local development
+  // 2. Local development & local Wi-Fi network testing
   if (typeof window !== 'undefined' && window.location) {
     const { hostname } = window.location;
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'http://localhost:5000';
+    if (
+      hostname === 'localhost' || 
+      hostname === '127.0.0.1' || 
+      hostname.startsWith('192.168.') || 
+      hostname.startsWith('10.') || 
+      hostname.startsWith('172.')
+    ) {
+      return `http://${hostname}:5000`;
     }
     // 3. Production deployed frontend (Vercel / custom domain) connects to live Render backend
     return 'https://yuvayuvakmandal-api.onrender.com';
@@ -543,6 +549,11 @@ export const getApiBaseUrl = () => {
 export const resolveMediaUrl = (url) => {
   if (!url) return '';
   const apiBase = getApiBaseUrl();
+
+  // If it's a data URL or blob URL, return as-is
+  if (url.startsWith('data:') || url.startsWith('blob:')) {
+    return url;
+  }
 
   // If it's an uploaded file (like /uploads/... or http://localhost:.../uploads/...)
   const uploadMatch = url.match(/\/uploads\/([^\/\?#]+)/);
@@ -714,13 +725,39 @@ export const SiteDataProvider = ({ children }) => {
     }
   }, [siteData]);
 
-  const updateHeroBanner = (headingOrObj, targetDateStr, tagline, bannerImageUrl, bannerMediaType, bannerVideoUrl, bannerTextAlignment, bannerVideoSound, headingLines, highlightLine, taglineLines) => {
+  // Guaranteed instantaneous push to server for user edits (prevents background polling race condition)
+  const saveStateAndSync = (updater) => {
     isIncomingFromServerRef.current = false;
+    isExplicitUserEditRef.current = true;
+    setSiteData(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : { ...prev, ...updater };
+      try {
+        localStorage.setItem('yuva_site_data', JSON.stringify(next));
+      } catch (e) {}
+
+      const apiBase = getApiBaseUrl();
+      fetch(`${apiBase}/api/site-data`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(next)
+      }).catch(err => console.log('Direct save error:', err));
+
+      if (syncChannelRef.current) {
+        try {
+          syncChannelRef.current.postMessage('REFETCH');
+        } catch (e) {}
+      }
+
+      return next;
+    });
+  };
+
+  const updateHeroBanner = (headingOrObj, targetDateStr, tagline, bannerImageUrl, bannerMediaType, bannerVideoUrl, bannerTextAlignment, bannerVideoSound, headingLines, highlightLine, taglineLines) => {
     if (typeof headingOrObj === 'object' && headingOrObj !== null) {
-      setSiteData(prev => ({ ...prev, ...headingOrObj }));
+      saveStateAndSync(prev => ({ ...prev, ...headingOrObj }));
       return;
     }
-    setSiteData(prev => {
+    saveStateAndSync(prev => {
       const newTagline = tagline !== undefined ? tagline : prev.heroTagline;
       const newTaglineLines = taglineLines !== undefined 
         ? taglineLines 
@@ -744,8 +781,7 @@ export const SiteDataProvider = ({ children }) => {
   };
 
   const updateVideoUrl = (url) => {
-    isIncomingFromServerRef.current = false;
-    setSiteData(prev => {
+    saveStateAndSync(prev => {
       const currentList = Array.isArray(prev.bigScreenVideos) && prev.bigScreenVideos.length > 0
         ? prev.bigScreenVideos
         : (url ? [{ id: Date.now(), title: 'Main Video', url }] : []);
@@ -755,7 +791,7 @@ export const SiteDataProvider = ({ children }) => {
 
   const addBigScreenVideo = (item) => {
     const newItem = { id: Date.now(), title: item.title !== undefined ? item.title : '', url: item.url };
-    setSiteData(prev => {
+    saveStateAndSync(prev => {
       const currentList = Array.isArray(prev.bigScreenVideos) ? prev.bigScreenVideos : (prev.videoUrl ? [{ id: Date.now() - 1, title: '', url: prev.videoUrl }] : []);
       const updatedList = [...currentList, newItem];
       return {
@@ -767,7 +803,7 @@ export const SiteDataProvider = ({ children }) => {
   };
 
   const deleteBigScreenVideo = (id) => {
-    setSiteData(prev => {
+    saveStateAndSync(prev => {
       const currentList = Array.isArray(prev.bigScreenVideos) ? prev.bigScreenVideos : [];
       const updatedList = currentList.filter(v => String(v.id) !== String(id) && String(v._id) !== String(id));
       return {
@@ -781,7 +817,7 @@ export const SiteDataProvider = ({ children }) => {
   const updateBigScreenVideo = (updatedItem) => {
     if (!updatedItem) return;
     const targetId = String(updatedItem.id !== undefined ? updatedItem.id : (updatedItem._id !== undefined ? updatedItem._id : ''));
-    setSiteData(prev => {
+    saveStateAndSync(prev => {
       const currentList = Array.isArray(prev.bigScreenVideos) ? prev.bigScreenVideos : [];
       const updatedList = currentList.map(item => {
         const itemId = String(item.id !== undefined ? item.id : (item._id !== undefined ? item._id : ''));
@@ -803,7 +839,7 @@ export const SiteDataProvider = ({ children }) => {
   };
 
   const setBigScreenVideosList = (list) => {
-    setSiteData(prev => ({
+    saveStateAndSync(prev => ({
       ...prev,
       bigScreenVideos: Array.isArray(list) ? list : [],
       videoUrl: list?.[0]?.url || ''
@@ -811,7 +847,7 @@ export const SiteDataProvider = ({ children }) => {
   };
 
   const updateAboutText = (text, years, vols, devs) => {
-    setSiteData(prev => ({
+    saveStateAndSync(prev => ({
       ...prev,
       aboutText: text,
       yearsCount: years,
@@ -829,7 +865,7 @@ export const SiteDataProvider = ({ children }) => {
     if (cleanData.fullAboutHeader !== undefined && !String(cleanData.fullAboutHeader).trim()) {
       delete cleanData.fullAboutHeader;
     }
-    setSiteData(prev => ({
+    saveStateAndSync(prev => ({
       ...prev,
       ...cleanData
     }));
@@ -844,30 +880,29 @@ export const SiteDataProvider = ({ children }) => {
     if (cleanInfo.formHeader !== undefined && !String(cleanInfo.formHeader).trim()) {
       delete cleanInfo.formHeader;
     }
-    setSiteData(prev => ({ ...prev, contactInfo: { ...prev.contactInfo, ...cleanInfo } }));
+    saveStateAndSync(prev => ({ ...prev, contactInfo: { ...prev.contactInfo, ...cleanInfo } }));
   };
 
   const updateAagmanDate = (dateStr) => {
-    setSiteData(prev => ({ ...prev, aagmanDate: dateStr || '2026-09-12' }));
+    saveStateAndSync(prev => ({ ...prev, aagmanDate: dateStr || '2026-09-12' }));
   };
 
   const updateFestivalStartDate = (dateStr) => {
-    setSiteData(prev => ({ ...prev, festivalStartDate: dateStr || '2026-09-14' }));
+    saveStateAndSync(prev => ({ ...prev, festivalStartDate: dateStr || '2026-09-14' }));
   };
 
   const addEvent = (title, time, desc) => {
     const newEv = { id: Date.now(), title, time, desc };
-    setSiteData(prev => ({ ...prev, events: [newEv, ...(prev.events || [])] }));
+    saveStateAndSync(prev => ({ ...prev, events: [newEv, ...(prev.events || [])] }));
   };
 
   const deleteEvent = (id) => {
-    setSiteData(prev => ({ ...prev, events: (prev.events || []).filter(e => e.id !== id) }));
+    saveStateAndSync(prev => ({ ...prev, events: (prev.events || []).filter(e => e.id !== id) }));
   };
 
   const addScheduleEvent = (item) => {
-    isIncomingFromServerRef.current = false;
     const newItem = { id: Date.now(), ...item };
-    setSiteData(prev => {
+    saveStateAndSync(prev => {
       const currentList = Array.isArray(prev.scheduleEvents) ? prev.scheduleEvents : defaultScheduleEvents;
       const updatedList = sortScheduleEvents([newItem, ...currentList]);
       return { ...prev, scheduleEvents: updatedList };
@@ -878,7 +913,7 @@ export const SiteDataProvider = ({ children }) => {
     if (!updatedItem) return;
     const targetId = String(updatedItem.id !== undefined ? updatedItem.id : (updatedItem._id !== undefined ? updatedItem._id : ''));
     
-    setSiteData(prev => {
+    saveStateAndSync(prev => {
       const currentList = Array.isArray(prev.scheduleEvents) ? prev.scheduleEvents : defaultScheduleEvents;
       let found = false;
       const updatedList = currentList.map(item => {
@@ -909,7 +944,7 @@ export const SiteDataProvider = ({ children }) => {
 
   const deleteScheduleEvent = (id) => {
     if (id === undefined || id === null) return;
-    setSiteData(prev => {
+    saveStateAndSync(prev => {
       const currentList = Array.isArray(prev.scheduleEvents) ? prev.scheduleEvents : defaultScheduleEvents;
       const updatedList = currentList.filter(i => String(i.id) !== String(id) && String(i._id) !== String(id));
       return { ...prev, scheduleEvents: updatedList };
@@ -917,7 +952,7 @@ export const SiteDataProvider = ({ children }) => {
   };
 
   const updateFullScheduleHeader = (header, subtext) => {
-    setSiteData(prev => ({
+    saveStateAndSync(prev => ({
       ...prev,
       fullScheduleHeader: (header && header.trim()) ? header.trim() : prev.fullScheduleHeader,
       fullScheduleSubText: subtext !== undefined ? subtext : prev.fullScheduleSubText
@@ -925,15 +960,14 @@ export const SiteDataProvider = ({ children }) => {
   };
 
   const addReel = (item) => {
-    isIncomingFromServerRef.current = false;
     const newItem = { id: Date.now(), ...item };
-    setSiteData(prev => ({ ...prev, reels: [newItem, ...(prev.reels || [])] }));
+    saveStateAndSync(prev => ({ ...prev, reels: [newItem, ...(prev.reels || [])] }));
   };
 
   const updateReel = (id, updatedItem) => {
     if (!updatedItem) return;
     const targetId = String(id !== undefined ? id : (updatedItem.id !== undefined ? updatedItem.id : ''));
-    setSiteData(prev => {
+    saveStateAndSync(prev => {
       const currentList = Array.isArray(prev.reels) ? prev.reels : [];
       const updatedList = currentList.map(item => {
         const itemId = String(item.id !== undefined ? item.id : (item._id !== undefined ? item._id : ''));
@@ -947,21 +981,28 @@ export const SiteDataProvider = ({ children }) => {
   };
 
   const deleteReel = (id) => {
-    setSiteData(prev => ({ ...prev, reels: (prev.reels || []).filter(r => String(r.id) !== String(id) && String(r._id) !== String(id)) }));
+    saveStateAndSync(prev => ({ ...prev, reels: (prev.reels || []).filter(r => String(r.id) !== String(id) && String(r._id) !== String(id)) }));
   };
 
   const setReelsList = (list) => {
-    setSiteData(prev => ({ ...prev, reels: Array.isArray(list) ? list : [] }));
+    saveStateAndSync(prev => ({ ...prev, reels: Array.isArray(list) ? list : [] }));
   };
 
   const addGalleryItem = (title, year, type, url) => {
-    isIncomingFromServerRef.current = false;
     const newItem = { id: Date.now(), title, year, type, url };
-    setSiteData(prev => ({ ...prev, galleryItems: [newItem, ...(prev.galleryItems || [])] }));
+    saveStateAndSync(prev => ({
+      ...prev,
+      galleryItems: [newItem, ...(Array.isArray(prev.galleryItems) ? prev.galleryItems : [])]
+    }));
   };
 
   const deleteGalleryItem = (id) => {
-    setSiteData(prev => ({ ...prev, galleryItems: (prev.galleryItems || []).filter(g => g.id !== id && g._id !== id) }));
+    saveStateAndSync(prev => ({
+      ...prev,
+      galleryItems: (Array.isArray(prev.galleryItems) ? prev.galleryItems : []).filter(
+        g => String(g.id) !== String(id) && String(g._id) !== String(id)
+      )
+    }));
   };
 
   const addVolunteer = (volunteer) => {

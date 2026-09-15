@@ -90,7 +90,7 @@ export default function PublicWebsite({ onOpenAdmin }) {
   }, []);
 
   // Precise Section Entrance Animation:
-  // - Hero triggers on initial page load (with 1s delay).
+  // - Hero triggers on initial page load (with 0.25s delay).
   // - Sections below hero (Schedule, About Us, Murtikar, etc.) ONLY trigger when the user scrolls down to them.
   useEffect(() => {
     if (typeof window === 'undefined') return;

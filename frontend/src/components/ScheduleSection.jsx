@@ -114,26 +114,35 @@ export default function ScheduleSection({ onBackToHome }) {
             gap: clamp(8px, 2.5vw, 12px) !important;
           }
           .schedule-card-item {
-            padding: clamp(10px, 2.8vw, 16px) !important;
+            padding: clamp(8px, 2.4vw, 14px) !important;
             border-radius: 12px !important;
           }
           .schedule-card-top-badges {
-            flex-wrap: wrap !important;
-            gap: 5px !important;
+            flex-wrap: nowrap !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            gap: 4px !important;
             margin-bottom: 10px !important;
+            width: 100% !important;
           }
           .schedule-card-category-badge {
-            font-size: clamp(9.5px, 2.4vw, 11px) !important;
-            padding: 3px 7px !important;
-            gap: 4px !important;
+            font-size: clamp(8px, 2.1vw, 10.5px) !important;
+            padding: 2px 6px !important;
+            gap: 3px !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
           }
           .schedule-card-category-badge svg {
-            width: 11px !important;
-            height: 11px !important;
+            width: 10px !important;
+            height: 10px !important;
+            flex-shrink: 0 !important;
           }
           .schedule-card-day-badge {
-            font-size: clamp(9px, 2.3vw, 10.5px) !important;
-            padding: 2px 7px !important;
+            font-size: clamp(7.5px, 2vw, 10px) !important;
+            padding: 2px 6px !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+            letter-spacing: -0.2px !important;
           }
           .schedule-card-title {
             font-size: clamp(13px, 3.4vw, 16px) !important;
@@ -270,7 +279,7 @@ export default function ScheduleSection({ onBackToHome }) {
             }}
           >
             {/* Top Category & Day Badge */}
-            <div className="schedule-card-top-badges" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div className="schedule-card-top-badges" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'nowrap', width: '100%', gap: '4px' }}>
               <span className="schedule-card-category-badge" style={{
                 background: 'rgba(255, 179, 0, 0.15)',
                 border: '1px solid rgba(255, 179, 0, 0.4)',
@@ -281,7 +290,9 @@ export default function ScheduleSection({ onBackToHome }) {
                 borderRadius: '16px',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '5px'
+                gap: '5px',
+                whiteSpace: 'nowrap',
+                flexShrink: 0
               }}>
                 <Sparkles size={13} color="#FFB300" /> {getCategoryLabel(item.category || item.day)}
               </span>
@@ -294,7 +305,8 @@ export default function ScheduleSection({ onBackToHome }) {
                 padding: '3px 10px',
                 borderRadius: '12px',
                 fontWeight: '700',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                flexShrink: 0
               }}>
                 {formatTranslatedDayBadge(item.day, timelineInfo)}
               </span>

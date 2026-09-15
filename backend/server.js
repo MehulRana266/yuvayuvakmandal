@@ -15,7 +15,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.set('trust proxy', 1);
 app.use(cors());
+
+// Define Media Model for permanent cloud storage in MongoDB Atlas
+const mediaSchema = new mongoose.Schema({
+  filename: { type: String, required: true, unique: true },
+  data: Buffer,
+  contentType: String
+}, { timestamps: true });
+const Media = mongoose.models.Media || mongoose.model('Media', mediaSchema);
 
 // Disable HTTP caching for all API responses so all browsers (Edge, Chrome, Mobile, etc.) always receive fresh live data
 app.use('/api', (req, res, next) => {
@@ -41,6 +50,25 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 app.use('/uploads', express.static(uploadsDir));
+
+// Fallback: If uploaded file is missing from disk (e.g. Render restart/ephemeral disk), fetch from MongoDB Atlas
+app.get('/uploads/:filename', async (req, res, next) => {
+  try {
+    const filename = req.params.filename;
+    if (isMongoConnected) {
+      const doc = await Media.findOne({ filename });
+      if (doc && doc.data) {
+        const filePath = path.join(uploadsDir, filename);
+        try { fs.writeFileSync(filePath, doc.data); } catch (e) {}
+        res.setHeader('Content-Type', doc.contentType || 'image/jpeg');
+        return res.send(doc.data);
+      }
+    }
+  } catch (err) {
+    console.error('Error fetching media from MongoDB Atlas:', err.message);
+  }
+  next();
+});
 
 // API Endpoint to handle File Uploads (Photos & Videos up to 1GB+)
 app.post('/api/upload', (req, res) => {
@@ -98,6 +126,25 @@ app.post('/api/upload', (req, res) => {
       console.log(`🎥 New media file saved locally: ${safeName}`);
     } else {
       console.log(`♻️ Reusing existing media file (deduplicated): ${safeName}`);
+    }
+
+    // Persist permanently in MongoDB Atlas so Render restarts never erase it
+    if (isMongoConnected) {
+      try {
+        let mimeType = 'image/jpeg';
+        if (extension === 'png') mimeType = 'image/png';
+        else if (extension === 'webp') mimeType = 'image/webp';
+        else if (extension === 'gif') mimeType = 'image/gif';
+        else if (extension === 'mp4') mimeType = 'video/mp4';
+        else if (extension === 'webm') mimeType = 'video/webm';
+        Media.findOneAndUpdate(
+          { filename: safeName },
+          { filename: safeName, data: buffer, contentType: mimeType },
+          { upsert: true }
+        ).catch(mErr => console.warn('MongoDB Atlas media save warning:', mErr.message));
+      } catch (mErr) {
+        console.warn('MongoDB Atlas media backup error:', mErr.message);
+      }
     }
 
     const publicUrl = `/uploads/${safeName}`;

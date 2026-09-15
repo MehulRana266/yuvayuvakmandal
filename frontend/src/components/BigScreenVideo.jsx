@@ -272,7 +272,7 @@ export default function BigScreenVideo() {
             .bigscreen-player-wrap {
               border: 2px solid #FFD700 !important;
               border-radius: 20px !important;
-              padding-bottom: 52% !important;
+              padding-bottom: 66% !important;
             }
             .bigscreen-sound-wrap {
               top: 10px !important;
@@ -312,10 +312,21 @@ export default function BigScreenVideo() {
             }
           }
 
+          /* MOBILE SCREENS (<= 480px) - Taller Cinematic Big Screen Height */
+          @media (max-width: 480px) {
+            .bigscreen-player-wrap {
+              border-radius: 16px !important;
+              padding-bottom: 72% !important;
+            }
+          }
+
           /* EXTRA SMALL MOBILE (<= 400px) Matching Schedule exactly */
           @media (max-width: 400px) {
             #bigscreen {
               padding: 25px 14px 24px !important;
+            }
+            .bigscreen-player-wrap {
+              padding-bottom: 74% !important;
             }
           }
       `}</style>
